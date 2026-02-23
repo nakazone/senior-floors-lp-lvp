@@ -36,6 +36,11 @@ export function Calculator({
         ? laborCost
         : materialCost + laborCost
 
+  const updateSqft = (value: string) => {
+    setSqft(value)
+    onSqftChange?.(value)
+  }
+
   const handleType = (t: 'material_only' | 'labor_only' | 'full_installation') => {
     setServiceType(t)
     onServiceTypeChange?.(t)
