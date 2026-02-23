@@ -1,24 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { FloorCard } from '@/components/FloorCard'
+import { LVP_PRODUCTS, type LVPProduct } from '@/data/lvpProducts'
 
-type Product = {
-  id: string
-  name: string
-  description: string | null
-  thickness: number
-  wearLayer: number
-  color: string
-  pricePerSqft: number
-  waterproof: boolean
-  commercial: boolean
-  imageUrl: string
-}
-
-export function Catalog({ onSelect }: { onSelect?: (product: Product) => void }) {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
+export function Catalog({ onSelect }: { onSelect?: (product: LVPProduct) => void }) {
   const [color, setColor] = useState('')
   const [thickness, setThickness] = useState('')
   const [waterproof, setWaterproof] = useState<string>('')
@@ -26,23 +12,20 @@ export function Catalog({ onSelect }: { onSelect?: (product: Product) => void })
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
 
-  useEffect(() => {
-    const params = new URLSearchParams()
-    if (color) params.set('color', color)
-    if (thickness) params.set('thickness', thickness)
-    if (waterproof === 'yes') params.set('waterproof', 'true')
-    if (waterproof === 'no') params.set('waterproof', 'false')
-    if (commercial === 'yes') params.set('commercial', 'true')
-    if (commercial === 'no') params.set('commercial', 'false')
-    if (minPrice) params.set('minPrice', minPrice)
-    if (maxPrice) params.set('maxPrice', maxPrice)
-    setLoading(true)
-    fetch(`/api/lvp?${params}`)
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.success) setProducts(d.data)
-      })
-      .finally(() => setLoading(false))
+  const products = useMemo(() => {
+    return LVP_PRODUCTS.filter((p) => {
+      if (color && !p.color.toLowerCase().includes(color.trim().toLowerCase())) return false
+      if (thickness && p.thickness !== parseFloat(thickness)) return false
+      if (waterproof === 'yes' && !p.waterproof) return false
+      if (waterproof === 'no' && p.waterproof) return false
+      if (commercial === 'yes' && !p.commercial) return false
+      if (commercial === 'no' && p.commercial) return false
+      const min = minPrice ? parseFloat(minPrice) : null
+      const max = maxPrice ? parseFloat(maxPrice) : null
+      if (min != null && !Number.isNaN(min) && p.pricePerSqft < min) return false
+      if (max != null && !Number.isNaN(max) && p.pricePerSqft > max) return false
+      return true
+    })
   }, [color, thickness, waterproof, commercial, minPrice, maxPrice])
 
   return (
@@ -109,10 +92,8 @@ export function Catalog({ onSelect }: { onSelect?: (product: Product) => void })
           />
         </div>
 
-        {loading ? (
-          <p className="text-center text-[#718096]">Loading products...</p>
-        ) : products.length === 0 ? (
-          <p className="text-center text-[#718096]">No products match. Add products in Admin.</p>
+        {products.length === 0 ? (
+          <p className="text-center text-[#718096]">No products match the filters.</p>
         ) : (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((p) => (
