@@ -11,12 +11,11 @@ export function Footer() {
           <div className="flex flex-col">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/SeniorFloors.png"
+              src="https://senior-floors.com/assets/SeniorFloors.png"
               alt="Senior Floors"
               className="mb-4 h-[70px] w-auto object-contain"
               onError={(e) => {
-                const t = e.target as HTMLImageElement
-                t.style.display = 'none'
+                (e.target as HTMLImageElement).style.display = 'none'
               }}
             />
             <p className="mb-4 text-sm leading-relaxed text-white/80">

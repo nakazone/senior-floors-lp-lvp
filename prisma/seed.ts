@@ -106,9 +106,11 @@ async function main() {
   })
   console.log('Admin user ready:', email)
 
-  const count = await prisma.lVPProduct.count()
-  if (count === 0) {
-    for (const sample of FLOOR_SAMPLES) {
+  // Ensure all 8 LVP floor models exist (create only if missing)
+  let created = 0
+  for (const sample of FLOOR_SAMPLES) {
+    const existing = await prisma.lVPProduct.findFirst({ where: { name: sample.name } })
+    if (!existing) {
       await prisma.lVPProduct.create({
         data: {
           name: sample.name,
@@ -123,9 +125,10 @@ async function main() {
           active: true,
         },
       })
+      created++
     }
-    console.log(`${FLOOR_SAMPLES.length} LVP floor models created`)
   }
+  if (created > 0) console.log(`${created} LVP floor model(s) created. Total samples: ${FLOOR_SAMPLES.length}.`)
 }
 
 main()

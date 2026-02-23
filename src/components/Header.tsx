@@ -19,9 +19,10 @@ export function Header() {
           {/* Logo - same as LP */}
           <div className="flex-shrink-0">
             <a href="#" className="flex items-center">
+              {/* Logo: local file or senior-floors.com; fallback to text */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/assets/SeniorFloors.png"
+                src="https://senior-floors.com/assets/SeniorFloors.png"
                 alt="Senior Floors"
                 className="h-[70px] w-auto object-contain md:h-[90px]"
                 onError={(e) => {
