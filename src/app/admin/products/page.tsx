@@ -23,7 +23,7 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true)
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null
-  const headers = token ? { Authorization: `Bearer ${token}` } : {}
+  const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {}
 
   useEffect(() => {
     if (!token) {

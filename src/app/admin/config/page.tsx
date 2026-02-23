@@ -11,7 +11,7 @@ export default function AdminConfigPage() {
   const [message, setMessage] = useState('')
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null
-  const headers = token ? { Authorization: `Bearer ${token}` } : {}
+  const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {}
 
   useEffect(() => {
     if (!token) {
