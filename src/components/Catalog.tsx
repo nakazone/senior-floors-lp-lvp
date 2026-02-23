@@ -35,7 +35,7 @@ export function Catalog({ onSelect }: { onSelect?: (product: LVPProduct) => void
           View Our Floors
         </h2>
         <p className="mx-auto mb-10 max-w-xl text-center text-[#4a5568]">
-          Browse LVP options as you would see them on your floor. Select one to get your estimate.
+          Browse LVP options as vertical samples. Select one to get your estimate.
         </p>
 
         <div className="mb-8 flex flex-wrap gap-4 rounded-xl bg-[#f7f8fc] p-4">
@@ -95,7 +95,7 @@ export function Catalog({ onSelect }: { onSelect?: (product: LVPProduct) => void
         {products.length === 0 ? (
           <p className="text-center text-[#718096]">No products match the filters.</p>
         ) : (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
             {products.map((p) => (
               <FloorCard key={p.id} product={p} onSelect={onSelect} />
             ))}
