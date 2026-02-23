@@ -15,7 +15,7 @@ type Product = {
   imageUrl: string
 }
 
-const FALLBACK_TEXTURE = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80'
+const FALLBACK_TEXTURE = '/assets/lvp.png'
 
 export function FloorCard({ product, onSelect }: { product: Product; onSelect?: (p: Product) => void }) {
   const [imgSrc, setImgSrc] = useState(product.imageUrl)

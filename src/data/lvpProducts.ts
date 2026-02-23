@@ -27,7 +27,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 3.5,
     waterproof: true,
     commercial: false,
-    imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    imageUrl: '/assets/lvp.png',
   },
   {
     id: 'natural-walnut',
@@ -39,7 +39,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 4.25,
     waterproof: true,
     commercial: false,
-    imageUrl: 'https://images.unsplash.com/photo-1595526114035-0d4ed19c43f3?w=800&q=80',
+    imageUrl: '/assets/lvp.png',
   },
   {
     id: 'slate-gray',
@@ -51,7 +51,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 3.75,
     waterproof: true,
     commercial: true,
-    imageUrl: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80',
+    imageUrl: '/assets/lvp.png',
   },
   {
     id: 'hickory',
@@ -63,7 +63,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 3.25,
     waterproof: true,
     commercial: false,
-    imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
+    imageUrl: '/assets/lvp.png',
   },
   {
     id: 'white-oak',
@@ -87,7 +87,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 4.0,
     waterproof: true,
     commercial: true,
-    imageUrl: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80',
+    imageUrl: '/assets/lvp.png',
   },
   {
     id: 'coastal-pine',
@@ -99,7 +99,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 2.95,
     waterproof: false,
     commercial: false,
-    imageUrl: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80',
+    imageUrl: '/assets/lvp.png',
   },
   {
     id: 'charcoal',
@@ -111,6 +111,6 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 4.75,
     waterproof: true,
     commercial: true,
-    imageUrl: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80',
+    imageUrl: '/assets/lvp.png',
   },
 ]
