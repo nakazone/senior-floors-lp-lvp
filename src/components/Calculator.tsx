@@ -7,9 +7,11 @@ type Product = { id: string; name: string; pricePerSqft: number } | null
 export function Calculator({
   selectedProduct,
   onServiceTypeChange,
+  onSqftChange,
 }: {
   selectedProduct: Product
   onServiceTypeChange?: (type: 'material_only' | 'labor_only' | 'full_installation') => void
+  onSqftChange?: (sqft: string) => void
 }) {
   const [sqft, setSqft] = useState<string>('')
   const [laborRate, setLaborRate] = useState(2.5)
