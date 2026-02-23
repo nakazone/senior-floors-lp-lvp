@@ -5,11 +5,11 @@ import { Header } from '@/components/Header'
 import { Hero } from '@/components/Hero'
 import { Benefits } from '@/components/Benefits'
 import { Catalog } from '@/components/Catalog'
-import { Calculator } from '@/components/Calculator'
 import { LeadForm } from '@/components/LeadForm'
 import { SocialProof } from '@/components/SocialProof'
 import { StickyCTA } from '@/components/StickyCTA'
 import { ExitIntentPopup } from '@/components/ExitIntentPopup'
+import { Footer } from '@/components/Footer'
 
 type Product = {
   id: string
@@ -35,17 +35,13 @@ export default function Home() {
         <Catalog
           onSelect={(p) => setSelectedProduct({ id: p.id, name: p.name, pricePerSqft: p.pricePerSqft, thickness: p.thickness, wearLayer: p.wearLayer, color: p.color, imageUrl: p.imageUrl })}
         />
-        <Calculator
-          selectedProduct={selectedProduct}
-          onServiceTypeChange={setServiceType}
-          onSqftChange={(v) => setSqft(v)}
-        />
         <LeadForm
           selectedProduct={selectedProduct}
           serviceType={serviceType}
           sqft={sqft}
         />
         <SocialProof />
+        <Footer />
       </main>
       <StickyCTA />
       <ExitIntentPopup />
