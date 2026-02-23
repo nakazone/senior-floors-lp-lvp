@@ -75,7 +75,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 4.5,
     waterproof: true,
     commercial: false,
-    imageUrl: 'https://images.unsplash.com/photo-1615873968403-89e068629265?w=800&q=80',
+    imageUrl: '/assets/lvp1.png',
   },
   {
     id: 'barnwood',

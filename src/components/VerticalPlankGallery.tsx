@@ -65,16 +65,6 @@ function PlankColumn({
           style={{ objectFit: 'cover' }}
           onError={onImageError}
         />
-        {/* Linhas horizontais sutis (segmentos da tábua) */}
-        <div className="absolute inset-0 flex flex-col opacity-60" aria-hidden>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-            <div
-              key={i}
-              className="flex-1 border-b border-black/20 last:border-b-0"
-              style={{ minHeight: 0 }}
-            />
-          ))}
-        </div>
       </div>
 
       {/* Overlay no hover: nome + preço + botão */}
