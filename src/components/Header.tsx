@@ -44,7 +44,7 @@ export function Header() {
             <a href="#hero" className="flex items-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="https://senior-floors.com/assets/SeniorFloors.png"
+                src="/assets/SeniorFloors.png"
                 alt="Senior Floors"
                 className="h-[55px] w-auto object-contain md:h-[90px]"
                 onError={(e) => {
@@ -71,7 +71,7 @@ export function Header() {
                 <li key={href} className="w-full md:w-auto">
                   <a
                     href={href}
-                    className="block border-b border-white/10 px-8 py-3 text-left text-[0.95rem] font-medium text-white transition hover:bg-white/10 hover:text-white md:relative md:inline-block md:border-0 md:py-2 md:px-0 md:after:absolute md:after:bottom-0 md:after:left-0 md:after:h-0.5 md:after:w-0 md:after:bg-[#d6b598] md:after:content-[''] md:after:transition-[width_0.3s_ease] md:hover:after:w-full"
+                    className="block border-b border-white/10 px-8 py-3 text-left text-[0.95rem] font-medium text-white transition hover:text-white md:relative md:inline-block md:border-0 md:py-2 md:px-0 md:after:absolute md:after:bottom-0 md:after:left-0 md:after:h-0.5 md:after:w-0 md:after:bg-[#d6b598] md:after:content-[''] md:after:transition-[width_0.3s_ease] md:hover:after:w-full"
                     onClick={() => setMobileOpen(false)}
                   >
                     {label}
