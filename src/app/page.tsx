@@ -9,6 +9,7 @@ import { Calculator } from '@/components/Calculator'
 import { LeadForm } from '@/components/LeadForm'
 import { SocialProof } from '@/components/SocialProof'
 import { StickyCTA } from '@/components/StickyCTA'
+import { ExitIntentPopup } from '@/components/ExitIntentPopup'
 
 type Product = {
   id: string
