@@ -7,7 +7,7 @@ import { Hero } from '@/components/Hero'
 import { Benefits } from '@/components/Benefits'
 import { VerticalPlankGallery } from '@/components/VerticalPlankGallery'
 import { LVP_PRODUCTS } from '@/data/lvpProducts'
-import { LeadForm } from '@/components/LeadForm'
+import { ContactSection } from '@/components/ContactSection'
 import { SocialProof } from '@/components/SocialProof'
 import { StickyCTA } from '@/components/StickyCTA'
 import { ExitIntentPopup } from '@/components/ExitIntentPopup'
@@ -48,7 +48,7 @@ export default function Home() {
           onSelect={handleSelectFloor}
           onGetQuote={handleGetQuote}
         />
-        <LeadForm
+        <ContactSection
           selectedProduct={selectedProduct}
           serviceType={serviceType}
           sqft={sqft}

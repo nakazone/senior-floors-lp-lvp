@@ -34,13 +34,12 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote }: Vertica
   return (
     <section
       id="plank-gallery"
-      className="relative w-full overflow-hidden snap-start snap-always box-border"
+      className="relative w-full overflow-hidden snap-start snap-always box-border pt-[5.5rem] md:pt-[7.5rem]"
       style={{
         height: '100vh',
         minHeight: '100vh',
         maxHeight: '100vh',
         margin: 0,
-        padding: 0,
       }}
       aria-label="Galeria de pisos em formato de tábuas"
     >
@@ -221,7 +220,7 @@ function DetailSlide({
       <button
         type="button"
         onClick={onBack}
-        className="absolute right-4 top-[5.5rem] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 text-white transition hover:bg-black/60 md:right-6 md:top-[8rem]"
+        className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 text-white transition hover:bg-black/60 md:right-6 md:top-6"
         aria-label="Back to gallery"
       >
         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
