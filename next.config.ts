@@ -2,8 +2,13 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   eslint: {
-    // Avoid "Cannot find module eslint-config-next/core-web-vitals" on Vercel
     ignoreDuringBuilds: true,
+  },
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'images.unsplash.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'senior-floors.com', pathname: '/**' },
+    ],
   },
 };
 

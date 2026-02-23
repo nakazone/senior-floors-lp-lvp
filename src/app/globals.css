@@ -20,6 +20,10 @@
   --shadow-lg: 0 4px 20px rgba(26, 32, 54, 0.15);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--bg-white);
   color: var(--text-dark);

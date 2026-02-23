@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { Header } from '@/components/Header'
 import { Hero } from '@/components/Hero'
 import { Benefits } from '@/components/Benefits'
-import { Catalog } from '@/components/Catalog'
+import { LVPGallery } from '@/components/LVPGallery'
+import { LVP_PRODUCTS } from '@/data/lvpProducts'
 import { LeadForm } from '@/components/LeadForm'
 import { SocialProof } from '@/components/SocialProof'
 import { StickyCTA } from '@/components/StickyCTA'
@@ -32,7 +33,8 @@ export default function Home() {
       <main className="min-h-screen">
         <Hero />
         <Benefits />
-        <Catalog
+        <LVPGallery
+          products={LVP_PRODUCTS}
           onSelect={(p) => setSelectedProduct({ id: p.id, name: p.name, pricePerSqft: p.pricePerSqft, thickness: p.thickness, wearLayer: p.wearLayer, color: p.color, imageUrl: p.imageUrl })}
         />
         <LeadForm
