@@ -41,9 +41,10 @@ export default function AdminProductsPage() {
   }, [router, token])
 
   const toggleActive = async (id: string, active: boolean) => {
+    if (!token) return
     const res = await fetch(`/api/admin/products/${id}`, {
       method: 'PUT',
-      headers: { ...headers, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ active: !active }),
     })
     const data = await res.json()

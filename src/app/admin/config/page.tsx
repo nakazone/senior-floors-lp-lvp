@@ -38,7 +38,7 @@ export default function AdminConfigPage() {
     setMessage('')
     const res = await fetch('/api/admin/config', {
       method: 'PUT',
-      headers: { ...headers, 'Content-Type': 'application/json' },
+      headers: token ? { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' },
       body: JSON.stringify({ laborRatePerSqft: v }),
     })
     const data = await res.json()

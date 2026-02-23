@@ -42,7 +42,7 @@ export default function AdminLeadsPage() {
 
   const exportCsv = async () => {
     if (!token) return
-    const res = await fetch('/api/admin/leads/export', { headers })
+    const res = await fetch('/api/admin/leads/export', { headers: { Authorization: `Bearer ${token}` } })
     if (!res.ok) return
     const blob = await res.blob()
     const url = URL.createObjectURL(blob)

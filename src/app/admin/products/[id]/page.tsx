@@ -23,14 +23,13 @@ export default function EditProductPage() {
   const [error, setError] = useState('')
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null
-  const headers = token ? { Authorization: `Bearer ${token}` } : {}
 
   useEffect(() => {
     if (!token) {
       router.replace('/admin')
       return
     }
-    fetch(`/api/admin/products/${id}`, { headers })
+    fetch(`/api/admin/products/${id}`, { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.json())
       .then((d) => {
         if (!d.success) {
@@ -55,11 +54,12 @@ export default function EditProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!token) return
     setError('')
     setSaving(true)
     const res = await fetch(`/api/admin/products/${id}`, {
       method: 'PUT',
-      headers: { ...headers, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name,
         description: description || null,
