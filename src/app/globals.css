@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Senior Floors LVP - Design system (aligned with LP/Site) */
+:root {
+  --primary: #1a2036;
+  --primary-hover: #252b47;
+  --primary-light: #2a3150;
+  --secondary: #d6b598;
+  --secondary-hover: #e0c4a8;
+  --text-dark: #1a2036;
+  --text-light: #4a5568;
+  --text-muted: #718096;
+  --bg-light: #f7f8fc;
+  --bg-white: #ffffff;
+  --border: #e2e8f0;
+  --success: #48bb78;
+  --shadow: 0 2px 10px rgba(26, 32, 54, 0.1);
+  --shadow-lg: 0 4px 20px rgba(26, 32, 54, 0.15);
+}
+
+body {
+  background: var(--bg-white);
+  color: var(--text-dark);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
