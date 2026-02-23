@@ -40,7 +40,7 @@ export function Hero() {
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden bg-[#1a2036] py-20 pt-28 md:pt-32"
       style={{
-        backgroundImage: 'url(/assets/background.jpg)',
+        backgroundImage: 'url(/assets/lvp-background.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
