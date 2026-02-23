@@ -34,7 +34,12 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote }: Vertica
   return (
     <section
       id="plank-gallery"
-      className="relative h-screen w-full overflow-hidden"
+      className="relative w-full overflow-hidden snap-start snap-always"
+      style={{
+        height: '100vh',
+        minHeight: '100vh',
+        maxHeight: '100vh',
+      }}
       aria-label="Galeria de pisos em formato de tábuas"
     >
       <AnimatePresence mode="wait" initial={false}>
@@ -60,7 +65,7 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote }: Vertica
         ) : (
           <motion.div
             key="detail"
-            className="absolute inset-0 flex flex-col md:flex-row"
+            className="absolute inset-0 flex min-h-0 flex-col md:flex-row"
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -157,8 +162,8 @@ function DetailSlide({
           />
         </div>
       </div>
-      <div className="flex shrink-0 flex-col justify-between bg-[#1a2036] p-6 text-white md:w-[380px] md:max-w-[90vw]">
-        <div>
+      <div className="flex min-h-0 shrink-0 flex-col justify-between overflow-y-auto bg-[#1a2036] p-6 text-white md:w-[380px] md:max-w-[90vw]">
+        <div className="shrink-0">
           <h2 className="text-2xl font-bold md:text-3xl">{product.name}</h2>
           {product.description && (
             <p className="mt-2 text-white/80">{product.description}</p>
