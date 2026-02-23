@@ -6,6 +6,7 @@ import Link from 'next/link'
 const navLinks = [
   { href: '#benefits', label: 'Benefits' },
   { href: '#gallery', label: 'LVP Options' },
+  { href: '#plank-gallery', label: 'Compare' },
   { href: '#contact', label: 'Get Quote' },
 ]
 
