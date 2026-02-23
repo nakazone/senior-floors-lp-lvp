@@ -27,7 +27,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 3.5,
     waterproof: true,
     commercial: false,
-    imageUrl: '/assets/lvp.png',
+    imageUrl: '/assets/lvp1.png',
   },
   {
     id: 'natural-walnut',
@@ -39,7 +39,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 4.25,
     waterproof: true,
     commercial: false,
-    imageUrl: '/assets/lvp.png',
+    imageUrl: '/assets/lvp2.png',
   },
   {
     id: 'slate-gray',
@@ -51,7 +51,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 3.75,
     waterproof: true,
     commercial: true,
-    imageUrl: '/assets/lvp.png',
+    imageUrl: '/assets/lvp1.png',
   },
   {
     id: 'hickory',
@@ -63,7 +63,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 3.25,
     waterproof: true,
     commercial: false,
-    imageUrl: '/assets/lvp.png',
+    imageUrl: '/assets/lvp2.png',
   },
   {
     id: 'white-oak',
@@ -87,7 +87,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 4.0,
     waterproof: true,
     commercial: true,
-    imageUrl: '/assets/lvp.png',
+    imageUrl: '/assets/lvp2.png',
   },
   {
     id: 'coastal-pine',
@@ -99,7 +99,7 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 2.95,
     waterproof: false,
     commercial: false,
-    imageUrl: '/assets/lvp.png',
+    imageUrl: '/assets/lvp1.png',
   },
   {
     id: 'charcoal',
@@ -111,6 +111,6 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 4.75,
     waterproof: true,
     commercial: true,
-    imageUrl: '/assets/lvp.png',
+    imageUrl: '/assets/lvp2.png',
   },
 ]

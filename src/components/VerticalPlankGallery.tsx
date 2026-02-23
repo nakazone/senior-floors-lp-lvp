@@ -9,7 +9,7 @@ export interface VerticalPlankGalleryProps {
   onSelect?: (product: LVPProduct) => void
 }
 
-const FALLBACK_IMAGE = '/assets/lvp.png'
+const FALLBACK_IMAGE = '/assets/lvp1.png'
 
 export function VerticalPlankGallery({ products, onSelect }: VerticalPlankGalleryProps) {
   const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({})
