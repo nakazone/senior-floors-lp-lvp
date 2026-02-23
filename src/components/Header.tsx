@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 
 const navLinks = [
+  { href: '#why-trust', label: 'Why Trust Us' },
   { href: '#benefits', label: 'Benefits' },
   { href: '#plank-gallery', label: 'LVP Options' },
   { href: '#contact', label: 'Get Quote' },

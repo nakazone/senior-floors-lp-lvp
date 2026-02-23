@@ -42,6 +42,7 @@ export default function Home() {
       <Header />
       <main className="min-h-screen">
         <Hero />
+        <WhyTrustUs />
         <Benefits />
         <VerticalPlankGallery
           products={LVP_PRODUCTS}
