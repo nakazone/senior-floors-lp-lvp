@@ -34,12 +34,13 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote }: Vertica
   return (
     <section
       id="plank-gallery"
-      className="relative w-full overflow-hidden snap-start snap-always box-border pt-[6rem] md:pt-[8rem]"
+      className="relative w-full overflow-hidden snap-start snap-always box-border"
       style={{
-        height: '100vh',
-        minHeight: '100vh',
-        maxHeight: '100vh',
+        height: 'calc(100vh - var(--header-height))',
+        minHeight: 'calc(100vh - var(--header-height))',
+        maxHeight: 'calc(100vh - var(--header-height))',
         margin: 0,
+        marginTop: 'var(--header-height)',
       }}
       aria-label="Galeria de pisos em formato de tábuas"
     >
