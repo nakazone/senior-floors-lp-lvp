@@ -18,6 +18,8 @@ export type LVPProduct = {
   roomImageUrl?: string
   /** If set, detail view shows scrollable gallery with these images (e.g. [plank, room]). Otherwise uses imageUrl + roomImageUrl. */
   galleryImages?: string[]
+  /** Detail gallery slides with captions. If set, detail shows arrow nav + labels. Takes precedence over galleryImages. */
+  gallerySlides?: Array<{ src: string; label: string }>
   /** Optional extra specs shown in detail view (e.g. SKU, plank size, installation). */
   specs?: Array<{ label: string; value: string }>
 }
@@ -142,8 +144,11 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 4.0,
     waterproof: true,
     commercial: false,
-    imageUrl: '/assets/arthurRoom.png',
+    imageUrl: '/assets/arthurPlank.png',
     roomImageUrl: '/assets/arthurRoom.png',
-    galleryImages: ['/assets/arthur.png', '/assets/arthurRoom.png'],
+    gallerySlides: [
+      { src: '/assets/arthur.png', label: 'Arthur LVP Sample' },
+      { src: '/assets/arthurRoom.png', label: 'Room with Arthur installed' },
+    ],
   },
 ]
