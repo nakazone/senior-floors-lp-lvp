@@ -15,7 +15,7 @@ const overlayStyle = {
   background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.35) 100%)',
 }
 
-export function LVPGallery({ products, onSelect }: LVPGalleryProps) {
+export function LVPGallery({ products, onSelect, onGetQuote }: LVPGalleryProps) {
   const containerRef = useRef<HTMLElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const [isScrolling, setIsScrolling] = useState(false)
