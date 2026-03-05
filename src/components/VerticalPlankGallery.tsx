@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { LVPProduct } from '@/data/lvpProducts'
+import { QuoteLightbox, type ServiceType } from '@/components/QuoteLightbox'
 
 const DEFAULT_LABOR_RATE_PER_SQFT = 2.5
 
-export type ServiceType = 'material_only' | 'labor_only' | 'full_installation'
+export type { ServiceType }
 
 export interface VerticalPlankGalleryProps {
   products: LVPProduct[]
@@ -17,9 +18,18 @@ export interface VerticalPlankGalleryProps {
 
 const FALLBACK_IMAGE = '/assets/lvp1.png'
 
+type QuotePayload = {
+  product: LVPProduct
+  sqft: string
+  serviceType: ServiceType
+  estimateTotal: number | null
+}
+
 export function VerticalPlankGallery({ products, onSelect, onGetQuote }: VerticalPlankGalleryProps) {
   const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({})
   const [selectedForDetail, setSelectedForDetail] = useState<LVPProduct | null>(null)
+  const [quoteLightboxOpen, setQuoteLightboxOpen] = useState(false)
+  const [quotePayload, setQuotePayload] = useState<QuotePayload | null>(null)
 
   const handleSelectFloor = (product: LVPProduct) => {
     onSelect?.(product)
@@ -28,8 +38,17 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote }: Vertica
 
   const handleBack = () => setSelectedForDetail(null)
 
-  const handleGetQuote = (product: LVPProduct, sqft?: string, serviceType?: ServiceType) => {
-    onGetQuote?.(product, sqft, serviceType)
+  const handleOpenQuoteLightbox = (product: LVPProduct, sqft: string, serviceType: ServiceType, estimateTotal: number | null) => {
+    setQuotePayload({ product, sqft, serviceType, estimateTotal })
+    setQuoteLightboxOpen(true)
+  }
+
+  const handleQuoteSuccess = () => {
+    if (quotePayload) {
+      onGetQuote?.(quotePayload.product, quotePayload.sqft, quotePayload.serviceType)
+    }
+    setQuoteLightboxOpen(false)
+    setQuotePayload(null)
     setSelectedForDetail(null)
   }
 
@@ -81,11 +100,23 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote }: Vertica
             <DetailSlide
               product={selectedForDetail}
               onBack={handleBack}
-              onGetQuote={handleGetQuote}
+              onOpenQuoteLightbox={handleOpenQuoteLightbox}
             />
           </motion.div>
         )}
       </AnimatePresence>
+
+      {quotePayload && (
+        <QuoteLightbox
+          isOpen={quoteLightboxOpen}
+          onClose={() => { setQuoteLightboxOpen(false); setQuotePayload(null) }}
+          onSuccess={handleQuoteSuccess}
+          product={quotePayload.product}
+          sqft={quotePayload.sqft}
+          serviceType={quotePayload.serviceType}
+          estimateTotal={quotePayload.estimateTotal}
+        />
+      )}
     </section>
   )
 }
@@ -146,11 +177,11 @@ function PlankColumn({
 function DetailSlide({
   product,
   onBack,
-  onGetQuote,
+  onOpenQuoteLightbox,
 }: {
   product: LVPProduct
   onBack: () => void
-  onGetQuote: (p: LVPProduct, sqft?: string, serviceType?: ServiceType) => void
+  onOpenQuoteLightbox: (product: LVPProduct, sqft: string, serviceType: ServiceType, estimateTotal: number | null) => void
 }) {
   const detailImage = product.roomImageUrl ?? product.imageUrl
   const [imgSrc, setImgSrc] = useState(detailImage)
@@ -306,7 +337,7 @@ function DetailSlide({
         <div className="mt-6 flex flex-col gap-3">
           <button
             type="button"
-            onClick={() => onGetQuote(product, sqft || undefined, serviceType)}
+            onClick={() => onOpenQuoteLightbox(product, sqft, serviceType, estimateTotal)}
             className="w-full rounded-xl bg-amber-500 py-3.5 font-semibold text-[#1a2036] transition hover:bg-amber-400"
           >
             Get Quote

@@ -142,4 +142,17 @@ export const LVP_PRODUCTS: LVPProduct[] = [
       { label: 'Pieces/box', value: '4pcs/box' },
     ],
   },
+  {
+    id: 'arthur',
+    name: 'Arthur',
+    description: 'Classic Arthur style LVP, versatile for any room',
+    thickness: 6,
+    wearLayer: 20,
+    color: 'Arthur',
+    pricePerSqft: 4.0,
+    waterproof: true,
+    commercial: false,
+    imageUrl: '/assets/arthur.png',
+    roomImageUrl: '/assets/arthurRoom.png',
+  },
 ]
