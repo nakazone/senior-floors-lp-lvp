@@ -9,6 +9,7 @@ import { WhyTrustUs } from '@/components/WhyTrustUs'
 import { Benefits } from '@/components/Benefits'
 import { VerticalPlankGallery } from '@/components/VerticalPlankGallery'
 import { LVPSelector } from '@/components/LVPSelector'
+import { Showroom3DErrorBoundary } from '@/components/Showroom3DErrorBoundary'
 import { LVP_PRODUCTS } from '@/data/lvpProducts'
 import { LVP_FLOORS, DEFAULT_LVP_TEXTURE } from '@/lib/lvpTextures'
 
@@ -78,10 +79,15 @@ export default function Home() {
               Rotate and zoom to explore the texture. Choose a style below.
             </p>
             <div className="mx-auto mt-8 flex justify-center">
-              <LVPShowroom3D
-                selectedTexture={showroomTexture}
-                onWebGLFail={() => {}}
-              />
+              <Showroom3DErrorBoundary
+                fallbackTexture={showroomTexture}
+                fallbackUi={null}
+              >
+                <LVPShowroom3D
+                  selectedTexture={showroomTexture}
+                  onWebGLFail={() => {}}
+                />
+              </Showroom3DErrorBoundary>
             </div>
             <div className="mt-10">
               <h3 className="text-center text-lg font-semibold text-white">

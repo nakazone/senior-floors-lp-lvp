@@ -13,13 +13,14 @@ const Canvas = dynamic(
 
 /** Superfície vertical (parede) com textura LVP repetida */
 function FloorPlane({ textureUrl }: { textureUrl: string }) {
-  const texture = useTexture(textureUrl)
+  const texture = useTexture(textureUrl, (tex) => {
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+    tex.repeat.set(4, 2)
+    tex.needsUpdate = true
+  })
   useEffect(() => {
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-    texture.repeat.set(4, 2)
-    texture.needsUpdate = true
     return () => texture.dispose()
-  }, [texture, textureUrl])
+  }, [texture])
 
   return (
     <mesh rotation={[0, 0, 0]} position={[0, 0, 0]}>
