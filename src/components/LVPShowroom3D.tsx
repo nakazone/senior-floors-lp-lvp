@@ -3,7 +3,8 @@
 import { Suspense, useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import * as THREE from 'three'
-import { useTexture, OrbitControls, useFrame } from '@react-three/drei'
+import { useTexture, OrbitControls } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 
 const Canvas = dynamic(
   () => import('@react-three/fiber').then((mod) => mod.Canvas),
