@@ -1,16 +1,21 @@
 'use client'
 
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import type { LVPProduct } from '@/data/lvpProducts'
 import { Header } from '@/components/Header'
 import { Hero } from '@/components/Hero'
 import { WhyTrustUs } from '@/components/WhyTrustUs'
 import { Benefits } from '@/components/Benefits'
 import { VerticalPlankGallery } from '@/components/VerticalPlankGallery'
-import { LVPShowroom3D } from '@/components/LVPShowroom3D'
 import { LVPSelector } from '@/components/LVPSelector'
 import { LVP_PRODUCTS } from '@/data/lvpProducts'
 import { LVP_FLOORS, DEFAULT_LVP_TEXTURE } from '@/lib/lvpTextures'
+
+const LVPShowroom3D = dynamic(
+  () => import('@/components/LVPShowroom3D').then((mod) => ({ default: mod.LVPShowroom3D })),
+  { ssr: false, loading: () => <div className="flex aspect-[3/2] w-full max-w-4xl items-center justify-center rounded-xl bg-neutral-800 text-neutral-400">Loading 3D viewer...</div> }
+)
 import { ContactSection } from '@/components/ContactSection'
 import { SocialProof } from '@/components/SocialProof'
 import { StickyCTA } from '@/components/StickyCTA'
