@@ -104,12 +104,20 @@ export function Hero() {
     <section
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden bg-[#1a2036] py-20 pt-28 md:pt-32"
-      style={{
-        backgroundImage: 'url(/assets/lvp-background.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
     >
+      {/* Video background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 z-0 h-full w-full object-cover"
+        poster="/assets/lvp-background.jpg"
+        aria-hidden
+      >
+        <source src="/assets/lvp.mov" type="video/quicktime" />
+        <source src="/assets/lvp.mp4" type="video/mp4" />
+      </video>
       {/* Overlay - same as LP */}
       <div
         className="absolute inset-0 z-[1]"
