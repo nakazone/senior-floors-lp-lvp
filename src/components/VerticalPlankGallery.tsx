@@ -41,6 +41,7 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote }: Vertica
         maxHeight: 'calc(100vh - var(--header-height))',
         margin: 0,
         marginTop: 'var(--header-height)',
+        scrollMarginTop: 'var(--header-height)',
       }}
       aria-label="Galeria de pisos em formato de tábuas"
     >
