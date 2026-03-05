@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { LVPProduct } from '@/data/lvpProducts'
@@ -150,18 +150,22 @@ function DetailSlide({
 }) {
   const detailImage = product.roomImageUrl ?? product.imageUrl
   const [imgSrc, setImgSrc] = useState(detailImage)
+  useEffect(() => {
+    setImgSrc(detailImage)
+  }, [product.id, detailImage])
+  const displaySrc = imgSrc || FALLBACK_IMAGE
 
   return (
     <>
-      <div className="relative flex-1 min-h-[40vh] md:min-h-0 md:h-full">
-        <div className="absolute inset-0 relative">
-          <Image
-            src={imgSrc || FALLBACK_IMAGE}
+      <div className="relative flex-1 min-h-[40vh] md:min-h-0 md:h-full w-full">
+        <div className="absolute inset-0 flex items-center justify-center bg-[#0f1320]">
+          {/* Use img for detail/room images so local assets load reliably */}
+          <img
+            key={displaySrc}
+            src={displaySrc}
             alt={product.name}
-            fill
-            sizes="100vw"
-            className="object-contain object-center"
-            priority
+            className="max-h-full max-w-full object-contain object-center"
+            style={{ width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '100%' }}
             onError={() => setImgSrc(FALLBACK_IMAGE)}
           />
         </div>
