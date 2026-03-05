@@ -8,10 +8,11 @@ import type { LVPProduct } from '@/data/lvpProducts'
 export interface LVPGalleryProps {
   products: LVPProduct[]
   onSelect?: (product: LVPProduct) => void
+  onGetQuote?: (product: LVPProduct) => void
 }
 
 const overlayStyle = {
-  background: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.4) 100%)',
+  background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.35) 100%)',
 }
 
 export function LVPGallery({ products, onSelect }: LVPGalleryProps) {
@@ -54,7 +55,7 @@ export function LVPGallery({ products, onSelect }: LVPGalleryProps) {
       id="gallery"
       ref={containerRef}
       className="relative w-full overflow-y-auto overflow-x-hidden snap-y snap-mandatory"
-      style={{ height: '100vh' }}
+      style={{ height: '100vh', scrollSnapType: 'y mandatory' }}
     >
       {products.map((product, index) => (
         <Slide
@@ -62,6 +63,7 @@ export function LVPGallery({ products, onSelect }: LVPGalleryProps) {
           product={product}
           index={index}
           onSelect={onSelect}
+          onGetQuote={onGetQuote}
         />
       ))}
 
@@ -145,13 +147,21 @@ function Slide({
   product,
   index,
   onSelect,
+  onGetQuote,
 }: {
   product: LVPProduct
   index: number
   onSelect?: (p: LVPProduct) => void
+  onGetQuote?: (p: LVPProduct) => void
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { amount: 0.5 })
+
+  const handleGetQuote = (e: React.MouseEvent) => {
+    e.preventDefault()
+    onGetQuote?.(product)
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
     <div
@@ -159,7 +169,7 @@ function Slide({
       className="group relative flex min-h-screen w-full shrink-0 snap-start snap-always items-end justify-start"
       style={{ minHeight: '100vh' }}
     >
-      {/* Background: textura em formato vertical, com leve perspectiva */}
+      {/* Background: textura vertical, leve perspectiva */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           className="absolute inset-0"
@@ -178,8 +188,8 @@ function Slide({
             className="object-cover object-center"
             style={{ objectFit: 'cover' }}
             priority={index < 2}
+            loading={index < 2 ? undefined : 'lazy'}
           />
-          {/* Brilho sutil no hover (textura) */}
           <div
             className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-[0.04]"
             style={{
@@ -190,12 +200,11 @@ function Slide({
             aria-hidden
           />
         </motion.div>
-        {/* Overlay escuro */}
         <div className="absolute inset-0" style={overlayStyle} aria-hidden />
       </div>
 
       {/* Conteúdo sobreposto */}
-      <div className="relative z-10 w-full max-w-6xl px-6 pb-24 pt-20 md:pb-32 md:pt-28">
+      <div className="relative z-10 w-full max-w-6xl px-6 pb-28 pt-20 md:pb-36 md:pt-28">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0.6, y: 20 }}
@@ -238,6 +247,7 @@ function Slide({
             </motion.button>
             <motion.a
               href="#contact"
+              onClick={handleGetQuote}
               className="rounded-xl border-2 border-white bg-transparent px-6 py-3.5 text-base font-bold text-white transition hover:bg-white/10"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
