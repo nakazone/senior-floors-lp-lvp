@@ -1,9 +1,11 @@
+import Image from 'next/image'
+
 const items = [
-  { title: '100% Waterproof', icon: '💧' },
-  { title: 'Scratch Resistant', icon: '🛡️' },
-  { title: 'Pet Friendly', icon: '🐾' },
-  { title: 'Affordable Alternative to Hardwood', icon: '💰' },
-  { title: 'Fast Installation', icon: '⚡' },
+  { title: '100% Waterproof', icon: '/assets/water.png', alt: 'Waterproof' },
+  { title: 'Scratch Resistant', icon: '/assets/scratch.png', alt: 'Scratch resistant' },
+  { title: 'Pet Friendly', icon: '/assets/pet.png', alt: 'Pet friendly' },
+  { title: 'Affordable Alternative to Hardwood', icon: '/assets/money.png', alt: 'Affordable' },
+  { title: 'Fast Installation', icon: '/assets/fast.png', alt: 'Fast installation' },
 ]
 
 export function Benefits() {
@@ -20,11 +22,24 @@ export function Benefits() {
           {items.map((item) => (
             <div
               key={item.title}
-              className="flex items-start gap-4 rounded-xl bg-white p-6 shadow-[0_2px_10px_rgba(26,32,54,0.1)]"
+              className="flex items-start gap-4 rounded-xl bg-white p-6 shadow-[0_2px_10px_rgba(26,32,54,0.1)] transition hover:shadow-[0_4px_20px_rgba(26,32,54,0.15)]"
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#1a2036] text-xl text-white">
-                {item.icon}
-              </span>
+              {/* Ícone com fundo azul – mesmo padrão da primeira LP (service-icon) */}
+              <div
+                className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl p-4 shadow-[0_2px_10px_rgba(26,32,54,0.1)] transition hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(26,32,54,0.15)]"
+                style={{
+                  background: 'linear-gradient(135deg, #1a2036 0%, #252b47 100%)',
+                }}
+              >
+                <Image
+                  src={item.icon}
+                  alt={item.alt}
+                  width={48}
+                  height={48}
+                  className="object-contain"
+                  style={{ filter: 'brightness(0) invert(1)' }}
+                />
+              </div>
               <h3 className="font-semibold text-[#1a2036]">{item.title}</h3>
             </div>
           ))}
