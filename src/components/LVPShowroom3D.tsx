@@ -11,9 +11,17 @@ const Canvas = dynamic(
   { ssr: false }
 )
 
+/** URL absoluta para o TextureLoader (evita falha em produção) */
+function getTextureFullUrl(path: string): string {
+  if (typeof window === 'undefined') return path
+  const base = window.location.origin
+  return path.startsWith('http') ? path : `${base}${path.startsWith('/') ? '' : '/'}${path}`
+}
+
 /** Superfície vertical (parede) com textura LVP repetida */
 function FloorPlane({ textureUrl }: { textureUrl: string }) {
-  const texture = useTexture(textureUrl, (tex) => {
+  const fullUrl = getTextureFullUrl(textureUrl)
+  const texture = useTexture(fullUrl, (tex) => {
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping
     tex.repeat.set(4, 2)
     tex.needsUpdate = true
@@ -74,25 +82,25 @@ export interface LVPShowroom3DProps {
 
 export function LVPShowroom3D({ selectedTexture, onWebGLFail }: LVPShowroom3DProps) {
   const [mounted, setMounted] = useState(false)
-  const [hasError, setHasError] = useState(false)
+  const [webglOk, setWebglOk] = useState<boolean | null>(null)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
   useEffect(() => {
-    if (!mounted) return
+    if (!mounted || typeof document === 'undefined') return
+    let cancelled = false
     try {
       const canvas = document.createElement('canvas')
       const gl = canvas.getContext('webgl2') || canvas.getContext('webgl')
-      if (!gl) {
-        setHasError(true)
-        onWebGLFail?.()
-      }
+      if (!cancelled) setWebglOk(!!gl)
+      if (!gl) onWebGLFail?.()
     } catch {
-      setHasError(true)
+      if (!cancelled) setWebglOk(false)
       onWebGLFail?.()
     }
+    return () => { cancelled = true }
   }, [mounted, onWebGLFail])
 
   const dpr = typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : Math.min(2, window.devicePixelRatio || 1)
@@ -105,7 +113,7 @@ export function LVPShowroom3D({ selectedTexture, onWebGLFail }: LVPShowroom3DPro
     )
   }
 
-  if (hasError) {
+  if (webglOk === false) {
     return (
       <div className="flex aspect-[3/2] w-full max-w-4xl flex-col items-center justify-center gap-2 rounded-xl bg-neutral-800 px-4">
         <p className="text-center text-neutral-400">
@@ -116,6 +124,14 @@ export function LVPShowroom3D({ selectedTexture, onWebGLFail }: LVPShowroom3DPro
           alt="Floor texture"
           className="max-h-48 rounded-lg object-cover object-center"
         />
+      </div>
+    )
+  }
+
+  if (webglOk !== true) {
+    return (
+      <div className="flex aspect-[3/2] w-full max-w-4xl items-center justify-center rounded-xl bg-neutral-800">
+        <p className="text-neutral-400">Checking 3D support...</p>
       </div>
     )
   }
