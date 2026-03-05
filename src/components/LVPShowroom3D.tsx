@@ -1,9 +1,9 @@
 'use client'
 
-import { Suspense, useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import * as THREE from 'three'
-import { useTexture, OrbitControls } from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 const Canvas = dynamic(
@@ -11,24 +11,38 @@ const Canvas = dynamic(
   { ssr: false }
 )
 
-/** URL absoluta para o TextureLoader (evita falha em produção) */
+/** URL absoluta para o loader (evita falha em produção) */
 function getTextureFullUrl(path: string): string {
   if (typeof window === 'undefined') return path
   const base = window.location.origin
   return path.startsWith('http') ? path : `${base}${path.startsWith('/') ? '' : '/'}${path}`
 }
 
-/** Superfície vertical (parede) com textura LVP repetida */
+/** Superfície com textura LVP; carrega com TextureLoader para não lançar e mostrar fallback cinza se falhar */
 function FloorPlane({ textureUrl }: { textureUrl: string }) {
-  const fullUrl = getTextureFullUrl(textureUrl)
-  const texture = useTexture(fullUrl, (tex) => {
-    tex.wrapS = tex.wrapT = THREE.RepeatWrapping
-    tex.repeat.set(4, 2)
-    tex.needsUpdate = true
-  })
+  const [texture, setTexture] = useState<THREE.Texture | null>(null)
+
   useEffect(() => {
-    return () => texture.dispose()
-  }, [texture])
+    const fullUrl = getTextureFullUrl(textureUrl)
+    const loader = new THREE.TextureLoader()
+    loader.load(
+      fullUrl,
+      (tex) => {
+        tex.wrapS = tex.wrapT = THREE.RepeatWrapping
+        tex.repeat.set(4, 2)
+        tex.needsUpdate = true
+        setTexture(tex)
+      },
+      undefined,
+      () => setTexture(null)
+    )
+    return () => {
+      setTexture((prev) => {
+        prev?.dispose()
+        return null
+      })
+    }
+  }, [textureUrl])
 
   return (
     <mesh rotation={[0, 0, 0]} position={[0, 0, 0]}>
@@ -37,6 +51,7 @@ function FloorPlane({ textureUrl }: { textureUrl: string }) {
         map={texture}
         roughness={0.7}
         metalness={0.1}
+        color={texture ? undefined : '#6b7280'}
       />
     </mesh>
   )
@@ -61,9 +76,7 @@ function SceneContent({ textureUrl }: { textureUrl: string }) {
       <ambientLight intensity={0.5} />
       <directionalLight position={[5, 5, 5]} intensity={1} />
       <spotLight position={[-5, 5, 5]} angle={0.3} intensity={0.8} />
-      <Suspense fallback={null}>
-        <FloorPlane key={textureUrl} textureUrl={textureUrl} />
-      </Suspense>
+      <FloorPlane key={textureUrl} textureUrl={textureUrl} />
       <OrbitControls
         enableZoom
         enablePan={false}
