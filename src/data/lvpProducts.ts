@@ -16,6 +16,8 @@ export type LVPProduct = {
   imageUrl: string
   /** Shown in detail view when user clicks "Select This Floor" (e.g. room photo). Falls back to imageUrl. */
   roomImageUrl?: string
+  /** If set, detail view shows scrollable gallery with these images (e.g. [plank, room]). Otherwise uses imageUrl + roomImageUrl. */
+  galleryImages?: string[]
   /** Optional extra specs shown in detail view (e.g. SKU, plank size, installation). */
   specs?: Array<{ label: string; value: string }>
 }
@@ -94,18 +96,6 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     imageUrl: '/assets/lvp2.png',
   },
   {
-    id: 'coastal-pine',
-    name: 'Coastal Pine',
-    description: 'Light pine, coastal and airy',
-    thickness: 5,
-    wearLayer: 12,
-    color: 'Pine',
-    pricePerSqft: 2.95,
-    waterproof: false,
-    commercial: false,
-    imageUrl: '/assets/lvp1.png',
-  },
-  {
     id: 'charcoal',
     name: 'Charcoal',
     description: 'Dark charcoal LVP, commercial grade',
@@ -152,7 +142,8 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     pricePerSqft: 4.0,
     waterproof: true,
     commercial: false,
-    imageUrl: '/assets/arthur.png',
+    imageUrl: '/assets/arthurRoom.png',
     roomImageUrl: '/assets/arthurRoom.png',
+    galleryImages: ['/assets/arthur.png', '/assets/arthurRoom.png'],
   },
 ]

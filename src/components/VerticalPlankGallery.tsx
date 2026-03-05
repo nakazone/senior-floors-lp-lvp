@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { LVPProduct } from '@/data/lvpProducts'
@@ -183,15 +183,24 @@ function DetailSlide({
   onBack: () => void
   onOpenQuoteLightbox: (product: LVPProduct, sqft: string, serviceType: ServiceType, estimateTotal: number | null) => void
 }) {
-  const detailImage = product.roomImageUrl ?? product.imageUrl
-  const [imgSrc, setImgSrc] = useState(detailImage)
+  const hasGallery = Boolean(product.galleryImages?.length || product.roomImageUrl)
+  const galleryImages = product.galleryImages?.length
+    ? product.galleryImages
+    : product.roomImageUrl
+      ? [product.imageUrl, product.roomImageUrl]
+      : [product.roomImageUrl ?? product.imageUrl]
   const [sqft, setSqft] = useState('')
   const [serviceType, setServiceType] = useState<ServiceType>('full_installation')
   const [laborRate, setLaborRate] = useState(DEFAULT_LABOR_RATE_PER_SQFT)
+  const [galleryIndex, setGalleryIndex] = useState(0)
+  const galleryScrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setImgSrc(detailImage)
-  }, [product.id, detailImage])
+    if (!hasGallery || !galleryScrollRef.current) return
+    const el = galleryScrollRef.current
+    const slideWidth = el.offsetWidth
+    el.scrollTo({ left: galleryIndex * slideWidth, behavior: 'smooth' })
+  }, [hasGallery, galleryIndex])
 
   useEffect(() => {
     fetch('/api/calculator/labor-rate')
@@ -212,21 +221,59 @@ function DetailSlide({
     : serviceType === 'material_only' ? materialTotal
     : laborTotal
 
-  const displaySrc = imgSrc || FALLBACK_IMAGE
-
   return (
     <>
-      <div className="relative flex-1 min-h-[40vh] md:min-h-0 md:h-full w-full">
-        <div className="absolute inset-0 flex items-center justify-center bg-[#0f1320]">
-          <img
-            key={displaySrc}
-            src={displaySrc}
-            alt={product.name}
-            className="max-h-full max-w-full object-contain object-center"
-            style={{ width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '100%' }}
-            onError={() => setImgSrc(FALLBACK_IMAGE)}
-          />
-        </div>
+      <div className="relative flex-1 min-h-[40vh] md:min-h-0 md:h-full w-full overflow-hidden">
+        {hasGallery ? (
+          <div className="absolute inset-0 flex flex-col bg-[#0f1320]">
+            <div
+              ref={galleryScrollRef}
+              className="flex flex-1 overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth"
+              onScroll={() => {
+                if (!galleryScrollRef.current) return
+                const el = galleryScrollRef.current
+                const idx = Math.round(el.scrollLeft / el.offsetWidth)
+                setGalleryIndex(Math.min(idx, galleryImages.length - 1))
+              }}
+            >
+              {galleryImages.map((src, i) => (
+                <div
+                  key={src}
+                  className="relative h-full min-w-full shrink-0 snap-center flex items-center justify-center"
+                >
+                  <img
+                    src={src}
+                    alt={`${product.name} ${i + 1}`}
+                    className="max-h-full max-w-full object-contain object-center"
+                    style={{ width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '100%' }}
+                    onError={(e) => { (e.target as HTMLImageElement).src = FALLBACK_IMAGE }}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="flex shrink-0 items-center justify-center gap-2 py-2">
+              {galleryImages.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setGalleryIndex(i)}
+                  className={`h-2 rounded-full transition-all ${i === galleryIndex ? 'w-6 bg-amber-400' : 'w-2 bg-white/40'}`}
+                  aria-label={`Image ${i + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-[#0f1320]">
+            <img
+              src={galleryImages[0] || FALLBACK_IMAGE}
+              alt={product.name}
+              className="max-h-full max-w-full object-contain object-center"
+              style={{ width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '100%' }}
+              onError={(e) => { (e.target as HTMLImageElement).src = FALLBACK_IMAGE }}
+            />
+          </div>
+        )}
       </div>
       <div className="flex min-h-0 shrink-0 flex-col justify-between overflow-y-auto bg-[#1a2036] p-6 text-white md:w-[380px] md:max-w-[90vw]">
         <div className="shrink-0">
