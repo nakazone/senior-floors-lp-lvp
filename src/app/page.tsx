@@ -7,8 +7,10 @@ import { Hero } from '@/components/Hero'
 import { WhyTrustUs } from '@/components/WhyTrustUs'
 import { Benefits } from '@/components/Benefits'
 import { VerticalPlankGallery } from '@/components/VerticalPlankGallery'
-import { LVPGallery } from '@/components/LVPGallery'
+import { LVPShowroom3D } from '@/components/LVPShowroom3D'
+import { LVPSelector } from '@/components/LVPSelector'
 import { LVP_PRODUCTS } from '@/data/lvpProducts'
+import { LVP_FLOORS, DEFAULT_LVP_TEXTURE } from '@/lib/lvpTextures'
 import { ContactSection } from '@/components/ContactSection'
 import { SocialProof } from '@/components/SocialProof'
 import { StickyCTA } from '@/components/StickyCTA'
@@ -29,6 +31,7 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product>(null)
   const [serviceType, setServiceType] = useState<'material_only' | 'labor_only' | 'full_installation'>('full_installation')
   const [sqft, setSqft] = useState('')
+  const [showroomTexture, setShowroomTexture] = useState(DEFAULT_LVP_TEXTURE)
 
   const handleSelectFloor = (p: LVPProduct) => {
     setSelectedProduct({ id: p.id, name: p.name, pricePerSqft: p.pricePerSqft, thickness: p.thickness, wearLayer: p.wearLayer, color: p.color, imageUrl: p.imageUrl })
@@ -53,31 +56,59 @@ export default function Home() {
         <WhyTrustUs />
         <Benefits />
 
-        {/* Nova seção: galeria fullscreen vertical para comparar formato */}
+        {/* 3D LVP Showroom — superfície vertical, troca de textura em tempo real */}
         <section
-          id="gallery-fullscreen"
-          className="relative scroll-mt-[var(--header-height)]"
-          aria-labelledby="gallery-fullscreen-title"
+          id="showroom-3d"
+          className="w-full scroll-mt-[var(--header-height)] bg-neutral-900 py-16 text-white md:py-24"
+          aria-labelledby="showroom-3d-title"
         >
-          <div
-            className="absolute left-0 right-0 z-10 px-4 pt-4 text-center md:pt-6"
-            style={{ top: 'var(--header-height)' }}
-          >
+          <div className="mx-auto max-w-5xl px-4">
             <h2
-              id="gallery-fullscreen-title"
-              className="text-xl font-bold text-white drop-shadow-lg md:text-2xl"
+              id="showroom-3d-title"
+              className="text-center text-2xl font-bold md:text-3xl"
             >
-              Compare: fullscreen vertical gallery
+              3D Floor Viewer
             </h2>
-            <p className="mx-auto mt-1 max-w-md text-sm text-white/90 drop-shadow md:text-base">
-              Scroll to explore each floor — then see the plank layout below
+            <p className="mx-auto mt-2 max-w-xl text-center text-neutral-300">
+              Rotate and zoom to explore the texture. Choose a style below.
             </p>
+            <div className="mx-auto mt-8 flex justify-center">
+              <LVPShowroom3D
+                selectedTexture={showroomTexture}
+                onWebGLFail={() => {}}
+              />
+            </div>
+            <div className="mt-10">
+              <h3 className="text-center text-lg font-semibold text-white">
+                Select Your LVP Style
+              </h3>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+                <LVPSelector
+                  floors={LVP_FLOORS}
+                  selectedTexture={showroomTexture}
+                  onSelect={setShowroomTexture}
+                />
+              </div>
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const floor = LVP_FLOORS.find((f) => f.texture === showroomTexture)
+                    if (floor?.productId) {
+                      const product = LVP_PRODUCTS.find((p) => p.id === floor.productId)
+                      if (product) {
+                        handleSelectFloor(product)
+                        handleGetQuote(product, undefined, undefined)
+                      }
+                    }
+                  }}
+                  className="rounded-xl bg-amber-500 px-8 py-3.5 font-bold text-[#1a2036] transition hover:bg-amber-400"
+                >
+                  Select This Floor & Get Quote
+                </button>
+              </div>
+            </div>
           </div>
-          <LVPGallery
-            products={LVP_PRODUCTS}
-            onSelect={handleSelectFloor}
-            onGetQuote={(p) => handleGetQuote(p, undefined, undefined)}
-          />
         </section>
 
         <section id="gallery-planks" className="relative scroll-mt-[var(--header-height)]" aria-label="Plank layout gallery">
