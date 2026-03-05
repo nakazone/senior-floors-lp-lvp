@@ -33,8 +33,14 @@ export default function Home() {
     setSelectedProduct({ id: p.id, name: p.name, pricePerSqft: p.pricePerSqft, thickness: p.thickness, wearLayer: p.wearLayer, color: p.color, imageUrl: p.imageUrl })
   }
 
-  const handleGetQuote = (p: LVPProduct) => {
+  const handleGetQuote = (
+    p: LVPProduct,
+    sqftFromGallery?: string,
+    serviceTypeFromGallery?: 'material_only' | 'labor_only' | 'full_installation'
+  ) => {
     setSelectedProduct({ id: p.id, name: p.name, pricePerSqft: p.pricePerSqft, thickness: p.thickness, wearLayer: p.wearLayer, color: p.color, imageUrl: p.imageUrl })
+    if (sqftFromGallery !== undefined) setSqft(sqftFromGallery)
+    if (serviceTypeFromGallery !== undefined) setServiceType(serviceTypeFromGallery)
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
   }
 

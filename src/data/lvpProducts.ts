@@ -16,6 +16,8 @@ export type LVPProduct = {
   imageUrl: string
   /** Shown in detail view when user clicks "Select This Floor" (e.g. room photo). Falls back to imageUrl. */
   roomImageUrl?: string
+  /** Optional extra specs shown in detail view (e.g. SKU, plank size, installation). */
+  specs?: Array<{ label: string; value: string }>
 }
 
 export const LVP_PRODUCTS: LVPProduct[] = [
@@ -119,13 +121,25 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     id: 'lvp5-floor',
     name: 'Premium Plank',
     description: 'Elegant LVP with natural variation, ideal for living spaces',
-    thickness: 6,
-    wearLayer: 20,
+    thickness: 8,
+    wearLayer: 22,
     color: 'Natural',
     pricePerSqft: 4.25,
     waterproof: true,
     commercial: false,
     imageUrl: '/assets/lvp5.png',
     roomImageUrl: '/assets/lvp5Room.png',
+    specs: [
+      { label: 'Thickness', value: '8MM' },
+      { label: 'SKU', value: 'S801312-H' },
+      { label: 'Material Type', value: 'SPC Flooring' },
+      { label: 'Plank Size', value: '9″ x 60″' },
+      { label: 'Total Thickness', value: '(6.5 + 1.5)mm' },
+      { label: 'Plank Repeat', value: '38.8SF (AB) (EIR)' },
+      { label: 'Wear Layer', value: '22mil' },
+      { label: 'Installation', value: 'Uniclic/Floating' },
+      { label: 'Sqft/box', value: '14.79 sqft/box' },
+      { label: 'Pieces/box', value: '4pcs/box' },
+    ],
   },
 ]

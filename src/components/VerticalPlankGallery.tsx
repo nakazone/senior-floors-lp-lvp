@@ -5,10 +5,14 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { LVPProduct } from '@/data/lvpProducts'
 
+const DEFAULT_LABOR_RATE_PER_SQFT = 2.5
+
+export type ServiceType = 'material_only' | 'labor_only' | 'full_installation'
+
 export interface VerticalPlankGalleryProps {
   products: LVPProduct[]
   onSelect?: (product: LVPProduct) => void
-  onGetQuote?: (product: LVPProduct) => void
+  onGetQuote?: (product: LVPProduct, sqft?: string, serviceType?: ServiceType) => void
 }
 
 const FALLBACK_IMAGE = '/assets/lvp1.png'
@@ -24,8 +28,8 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote }: Vertica
 
   const handleBack = () => setSelectedForDetail(null)
 
-  const handleGetQuote = (product: LVPProduct) => {
-    onGetQuote?.(product)
+  const handleGetQuote = (product: LVPProduct, sqft?: string, serviceType?: ServiceType) => {
+    onGetQuote?.(product, sqft, serviceType)
     setSelectedForDetail(null)
   }
 
@@ -146,20 +150,43 @@ function DetailSlide({
 }: {
   product: LVPProduct
   onBack: () => void
-  onGetQuote: (p: LVPProduct) => void
+  onGetQuote: (p: LVPProduct, sqft?: string, serviceType?: ServiceType) => void
 }) {
   const detailImage = product.roomImageUrl ?? product.imageUrl
   const [imgSrc, setImgSrc] = useState(detailImage)
+  const [sqft, setSqft] = useState('')
+  const [serviceType, setServiceType] = useState<ServiceType>('full_installation')
+  const [laborRate, setLaborRate] = useState(DEFAULT_LABOR_RATE_PER_SQFT)
+
   useEffect(() => {
     setImgSrc(detailImage)
   }, [product.id, detailImage])
+
+  useEffect(() => {
+    fetch('/api/calculator/labor-rate')
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.data?.laborRatePerSqft != null) setLaborRate(Number(data.data.laborRatePerSqft))
+      })
+      .catch(() => {})
+  }, [])
+
+  const sqftNum = parseFloat(sqft)
+  const validSqft = Number.isFinite(sqftNum) && sqftNum > 0
+  const materialTotal = validSqft ? Math.round(sqftNum * product.pricePerSqft * 100) / 100 : null
+  const laborTotal = validSqft ? Math.round(sqftNum * laborRate * 100) / 100 : null
+  const fullTotal = materialTotal != null && laborTotal != null ? Math.round((materialTotal + laborTotal) * 100) / 100 : null
+  const estimateTotal =
+    serviceType === 'full_installation' ? fullTotal
+    : serviceType === 'material_only' ? materialTotal
+    : laborTotal
+
   const displaySrc = imgSrc || FALLBACK_IMAGE
 
   return (
     <>
       <div className="relative flex-1 min-h-[40vh] md:min-h-0 md:h-full w-full">
         <div className="absolute inset-0 flex items-center justify-center bg-[#0f1320]">
-          {/* Use img for detail/room images so local assets load reliably */}
           <img
             key={displaySrc}
             src={displaySrc}
@@ -177,40 +204,109 @@ function DetailSlide({
             <p className="mt-2 text-white/80">{product.description}</p>
           )}
           <dl className="mt-6 space-y-2 text-sm">
-            <div className="flex justify-between">
-              <dt className="text-white/60">Thickness</dt>
-              <dd className="font-medium">{product.thickness}mm</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-white/60">Wear layer</dt>
-              <dd className="font-medium">{product.wearLayer} mil</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-white/60">Color</dt>
-              <dd className="font-medium">{product.color}</dd>
-            </div>
-            {product.waterproof && (
-              <div className="flex justify-between">
-                <dt className="text-white/60">Waterproof</dt>
-                <dd className="font-medium text-emerald-400">Yes</dd>
-              </div>
+            {product.specs && product.specs.length > 0 ? (
+              <>
+                {product.specs.map(({ label, value }) => (
+                  <div key={label} className="flex justify-between gap-2">
+                    <dt className="text-white/60 shrink-0">{label}</dt>
+                    <dd className="font-medium text-right">{value}</dd>
+                  </div>
+                ))}
+                <div className="mt-3 flex justify-between border-t border-white/20 pt-3">
+                  <dt className="text-white/60">Price</dt>
+                  <dd className="text-xl font-bold">${product.pricePerSqft.toFixed(2)}/sqft</dd>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex justify-between">
+                  <dt className="text-white/60">Thickness</dt>
+                  <dd className="font-medium">{product.thickness}mm</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-white/60">Wear layer</dt>
+                  <dd className="font-medium">{product.wearLayer} mil</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-white/60">Color</dt>
+                  <dd className="font-medium">{product.color}</dd>
+                </div>
+                {product.waterproof && (
+                  <div className="flex justify-between">
+                    <dt className="text-white/60">Waterproof</dt>
+                    <dd className="font-medium text-emerald-400">Yes</dd>
+                  </div>
+                )}
+                {product.commercial && (
+                  <div className="flex justify-between">
+                    <dt className="text-white/60">Grade</dt>
+                    <dd className="font-medium text-amber-400">Commercial</dd>
+                  </div>
+                )}
+                <div className="mt-3 flex justify-between border-t border-white/20 pt-3">
+                  <dt className="text-white/60">Price</dt>
+                  <dd className="text-xl font-bold">${product.pricePerSqft.toFixed(2)}/sqft</dd>
+                </div>
+              </>
             )}
-            {product.commercial && (
-              <div className="flex justify-between">
-                <dt className="text-white/60">Grade</dt>
-                <dd className="font-medium text-amber-400">Commercial</dd>
-              </div>
-            )}
-            <div className="mt-3 flex justify-between border-t border-white/20 pt-3">
-              <dt className="text-white/60">Price</dt>
-              <dd className="text-xl font-bold">${product.pricePerSqft.toFixed(2)}/sqft</dd>
-            </div>
           </dl>
+
+          {/* Calculator inside detail slide */}
+          <div className="mt-6 rounded-lg border border-white/20 bg-white/5 p-4">
+            <h3 className="mb-3 text-base font-semibold text-white">Estimate</h3>
+            <div className="space-y-3">
+              <div>
+                <label htmlFor="detail-sqft" className="mb-1 block text-xs text-white/70">Square footage</label>
+                <input
+                  id="detail-sqft"
+                  type="number"
+                  min={1}
+                  value={sqft}
+                  onChange={(e) => setSqft(e.target.value)}
+                  placeholder="e.g. 500"
+                  className="w-full rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
+                />
+              </div>
+              <div>
+                <label htmlFor="detail-service" className="mb-1 block text-xs text-white/70">Service</label>
+                <select
+                  id="detail-service"
+                  value={serviceType}
+                  onChange={(e) => setServiceType(e.target.value as ServiceType)}
+                  className="w-full rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm text-white focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
+                >
+                  <option value="full_installation">Full installation (material + labor)</option>
+                  <option value="material_only">Material only</option>
+                  <option value="labor_only">Labor only</option>
+                </select>
+              </div>
+              {validSqft && estimateTotal != null && (
+                <div className="border-t border-white/20 pt-3">
+                  {serviceType === 'full_installation' && materialTotal != null && laborTotal != null && (
+                    <div className="mb-1 flex justify-between text-xs text-white/80">
+                      <span>Material</span>
+                      <span>${materialTotal.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {serviceType === 'full_installation' && laborTotal != null && (
+                    <div className="mb-1 flex justify-between text-xs text-white/80">
+                      <span>Labor</span>
+                      <span>${laborTotal.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-semibold text-amber-400">
+                    <span>Est. total</span>
+                    <span>${estimateTotal.toLocaleString()}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
         <div className="mt-6 flex flex-col gap-3">
           <button
             type="button"
-            onClick={() => onGetQuote(product)}
+            onClick={() => onGetQuote(product, sqft || undefined, serviceType)}
             className="w-full rounded-xl bg-amber-500 py-3.5 font-semibold text-[#1a2036] transition hover:bg-amber-400"
           >
             Get Quote
