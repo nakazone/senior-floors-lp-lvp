@@ -38,7 +38,7 @@ export function WhyTrustUs() {
           </a>
         </div>
 
-        <div className="testimonials-grid grid grid-cols-1 gap-8 md:grid-cols-1">
+        <div className="testimonials-grid grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
           <div className="testimonial-card rounded-lg bg-white p-6 shadow-[0_2px_10px_rgba(26,32,54,0.1)]">
             <div className="stars mb-4 text-[1.25rem] text-[#d6b598]">★★★★★</div>
             <p className="testimonial-text mb-4 italic text-[#1a2036]">
