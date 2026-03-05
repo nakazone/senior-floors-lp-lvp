@@ -14,6 +14,8 @@ export type LVPProduct = {
   waterproof: boolean
   commercial: boolean
   imageUrl: string
+  /** Shown in detail view when user clicks "Select This Floor" (e.g. room photo). Falls back to imageUrl. */
+  roomImageUrl?: string
 }
 
 export const LVP_PRODUCTS: LVPProduct[] = [
@@ -112,5 +114,18 @@ export const LVP_PRODUCTS: LVPProduct[] = [
     waterproof: true,
     commercial: true,
     imageUrl: '/assets/lvp2.png',
+  },
+  {
+    id: 'lvp5-floor',
+    name: 'Premium Plank',
+    description: 'Elegant LVP with natural variation, ideal for living spaces',
+    thickness: 6,
+    wearLayer: 20,
+    color: 'Natural',
+    pricePerSqft: 4.25,
+    waterproof: true,
+    commercial: false,
+    imageUrl: '/assets/lvp5.png',
+    roomImageUrl: '/assets/lvp5Room.png',
   },
 ]

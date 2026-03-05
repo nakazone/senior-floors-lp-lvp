@@ -148,7 +148,8 @@ function DetailSlide({
   onBack: () => void
   onGetQuote: (p: LVPProduct) => void
 }) {
-  const [imgSrc, setImgSrc] = useState(product.imageUrl)
+  const detailImage = product.roomImageUrl ?? product.imageUrl
+  const [imgSrc, setImgSrc] = useState(detailImage)
 
   return (
     <>
