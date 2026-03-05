@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
+const FORM_BASE_URL = process.env.NEXT_PUBLIC_SENIOR_FLOORS_FORM_BASE_URL || 'https://lp.senior-floors.com'
+
 type Product = {
   id: string
   name: string
@@ -19,6 +21,8 @@ const GALLERY_ITEMS = [
   { src: '/assets/lvp-background.jpg', alt: 'LVP flooring – wide plank', caption: 'Luxury vinyl plank – Colorado home' },
 ]
 
+type ZipCheckResult = { inRange: boolean; message?: string } | null
+
 export function ContactSection({
   selectedProduct,
   serviceType: initialServiceType,
@@ -31,15 +35,17 @@ export function ContactSection({
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [projectType, setProjectType] = useState('LVP / Luxury Vinyl Plank')
   const [zipCode, setZipCode] = useState('')
   const [message, setMessage] = useState('')
   const [sqft, setSqft] = useState(initialSqft || '')
   const [serviceType, setServiceType] = useState(initialServiceType)
-  const [photoUrl, setPhotoUrl] = useState<string | undefined>()
   const [galleryIndex, setGalleryIndex] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState('')
+  const [zipCheckResult, setZipCheckResult] = useState<ZipCheckResult | 'checking' | null>(null)
+  const [zipCheckLoading, setZipCheckLoading] = useState(false)
 
   useEffect(() => { setSqft(initialSqft || '') }, [initialSqft])
   useEffect(() => { setServiceType(initialServiceType) }, [initialServiceType])
@@ -49,42 +55,99 @@ export function ContactSection({
     return () => clearInterval(t)
   }, [])
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    if (file.size > 2 * 1024 * 1024) {
-      setError('Photo must be under 2MB')
+  const runZipCheck = async () => {
+    const zip = zipCode.replace(/\D/g, '').slice(0, 5)
+    if (zip.length < 5) {
+      setZipCheckResult(null)
       return
     }
-    const reader = new FileReader()
-    reader.onload = () => setPhotoUrl(reader.result as string)
-    reader.readAsDataURL(file)
+    setZipCheckLoading(true)
+    setZipCheckResult('checking')
+    try {
+      const res = await fetch(`${FORM_BASE_URL}/api/validate-zip?zip=${encodeURIComponent(zip)}`, {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+      })
+      const data = await res.json()
+      if (data?.ok === true) {
+        setZipCheckResult({ inRange: data.inRange === true, message: data.message || undefined })
+      } else {
+        setZipCheckResult({ inRange: false, message: 'Could not verify ZIP.' })
+      }
+    } catch {
+      setZipCheckResult({ inRange: false, message: 'Could not check availability.' })
+    } finally {
+      setZipCheckLoading(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    const zipClean = zipCode.replace(/\D/g, '').slice(0, 5)
+    if (zipClean.length < 5) {
+      setError('Please enter a valid 5-digit US zip code.')
+      return
+    }
+    if (!projectType?.trim()) {
+      setError('Please select a project type.')
+      return
+    }
+    if (zipCheckResult === null || zipCheckResult === 'checking') {
+      setError('Please check that your ZIP is in our service area before submitting.')
+      return
+    }
+    if (!zipCheckResult.inRange) {
+      setError(zipCheckResult.message || "We don't currently serve this ZIP code.")
+      return
+    }
+    if (name.trim().length < 2) {
+      setError('Name is required (at least 2 characters).')
+      return
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError('Please enter a valid email address.')
+      return
+    }
+    if (phone.replace(/\D/g, '').length < 10) {
+      setError('Please enter a valid phone number.')
+      return
+    }
+
     setSubmitting(true)
     try {
-      const res = await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          phone,
-          zipCode,
-          sqft: sqft ? parseFloat(sqft) : undefined,
-          productId: selectedProduct?.id || undefined,
-          serviceType,
-          photoUrl: photoUrl || undefined,
-        }),
+      let messageBody = message.trim()
+      if (sqft || serviceType || selectedProduct?.name) {
+        const extras: string[] = []
+        if (sqft) extras.push(`Square footage (est.): ${sqft}`)
+        if (serviceType) extras.push(`Service: ${serviceType === 'full_installation' ? 'Full installation' : serviceType === 'material_only' ? 'Material only' : 'Labor only'}`)
+        if (selectedProduct?.name) extras.push(`Selected product: ${selectedProduct.name}`)
+        if (extras.length) messageBody = [messageBody, '', '---', ...extras].filter(Boolean).join('\n')
+      }
+      const params = new URLSearchParams({
+        'form-name': 'lvp-form',
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        project_type: projectType.trim(),
+        zipcode: zipClean,
+        message: messageBody,
       })
-      const data = await res.json()
-      if (!data.success) throw new Error(data.error || 'Failed to submit')
+      const res = await fetch(`${FORM_BASE_URL}/api/send-lead`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+        body: params.toString(),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || (data && data.success === false)) {
+        throw new Error((data && data.message) || `Request failed (${res.status})`)
+      }
+      if (typeof (window as unknown as { fbq?: (a: string, b: string) => void }).fbq === 'function') {
+        try { (window as unknown as { fbq: (a: string, b: string) => void }).fbq('track', 'Lead') } catch {}
+      }
       setDone(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
     } finally {
       setSubmitting(false)
     }
@@ -218,22 +281,64 @@ export function ContactSection({
                       />
                     </div>
                     <div>
+                      <label htmlFor="contact-project-type" className="mb-1 block text-sm font-semibold text-[#1a2036]">
+                        Project Type *
+                      </label>
+                      <select
+                        id="contact-project-type"
+                        required
+                        value={projectType}
+                        onChange={(e) => setProjectType(e.target.value)}
+                        className="w-full rounded-md border-2 border-[#e2e8f0] px-3 py-2.5 text-[#1a2036] transition focus:border-[#1a2036] focus:outline-none focus:ring-2 focus:ring-[#1a2036]/20"
+                      >
+                        <option value="">Select project type</option>
+                        <option value="Hardwood Installation">Hardwood Installation</option>
+                        <option value="Hardwood Refinishing">Hardwood Refinishing</option>
+                        <option value="LVP / Luxury Vinyl Plank">LVP / Luxury Vinyl Plank</option>
+                        <option value="Laminate">Laminate</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div>
                       <label htmlFor="contact-zipcode" className="mb-1 block text-sm font-semibold text-[#1a2036]">
                         Zip Code *
                       </label>
-                      <input
-                        id="contact-zipcode"
-                        type="text"
-                        required
-                        pattern="[0-9]{5}"
-                        maxLength={5}
-                        value={zipCode}
-                        onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ''))}
-                        className="w-full rounded-md border-2 border-[#e2e8f0] px-3 py-2.5 text-[#1a2036] transition focus:border-[#1a2036] focus:outline-none focus:ring-2 focus:ring-[#1a2036]/20"
-                        placeholder="80202"
-                        autoComplete="postal-code"
-                        inputMode="numeric"
-                      />
+                      <p className="mb-1 text-sm text-[#718096]">Enter your ZIP Code to check availability</p>
+                      <div className="flex gap-2">
+                        <input
+                          id="contact-zipcode"
+                          type="text"
+                          required
+                          pattern="[0-9]{5}"
+                          maxLength={5}
+                          value={zipCode}
+                          onChange={(e) => {
+                            setZipCode(e.target.value.replace(/\D/g, ''))
+                            setZipCheckResult(null)
+                          }}
+                          onBlur={() => zipCode.replace(/\D/g, '').length === 5 && runZipCheck()}
+                          className="flex-1 min-w-0 rounded-md border-2 border-[#e2e8f0] px-3 py-2.5 text-[#1a2036] transition focus:border-[#1a2036] focus:outline-none focus:ring-2 focus:ring-[#1a2036]/20"
+                          placeholder="12345"
+                          autoComplete="postal-code"
+                          inputMode="numeric"
+                        />
+                        <button
+                          type="button"
+                          onClick={runZipCheck}
+                          disabled={zipCheckLoading || zipCode.replace(/\D/g, '').length < 5}
+                          className="shrink-0 rounded-md bg-[#1a2036] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#252b47] disabled:opacity-50 disabled:cursor-not-allowed"
+                          aria-label="Check availability"
+                        >
+                          {zipCheckLoading ? 'Checking...' : 'Check'}
+                        </button>
+                      </div>
+                      {zipCheckResult && zipCheckResult !== 'checking' && (
+                        <p className={`mt-1.5 text-sm font-medium ${zipCheckResult.inRange ? 'text-[#48bb78]' : 'text-red-600'}`} role="status">
+                          {zipCheckResult.inRange
+                            ? '✅ Great news! We serve your area.'
+                            : '❌ Sorry, we don\'t currently serve this ZIP Code.'}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label htmlFor="contact-sqft" className="mb-1 block text-sm font-semibold text-[#1a2036]">
@@ -279,15 +384,6 @@ export function ContactSection({
                         className="w-full rounded-md border-2 border-[#e2e8f0] px-3 py-2.5 text-[#1a2036] transition focus:border-[#1a2036] focus:outline-none focus:ring-2 focus:ring-[#1a2036]/20"
                         placeholder="Tell us about your project..."
                         aria-label="Project details"
-                      />
-                    </div>
-                    <div>
-                      <label className="mb-1 block text-sm font-semibold text-[#1a2036]">Photo (optional)</label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handlePhotoChange}
-                        className="block w-full text-sm text-[#4a5568] file:mr-2 file:rounded file:border-0 file:bg-[#1a2036] file:px-3 file:py-1.5 file:text-sm file:text-white file:transition file:hover:bg-[#252b47]"
                       />
                     </div>
                   </div>

@@ -34,7 +34,7 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote }: Vertica
   return (
     <section
       id="plank-gallery"
-      className="relative w-full overflow-hidden snap-start snap-always box-border pt-[5.5rem] md:pt-[7.5rem]"
+      className="relative w-full overflow-hidden snap-start snap-always box-border pt-[6rem] md:pt-[8rem]"
       style={{
         height: '100vh',
         minHeight: '100vh',
