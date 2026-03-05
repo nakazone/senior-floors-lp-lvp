@@ -115,7 +115,7 @@ export function Hero() {
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden bg-[#1a2036] py-20 pt-28 md:pt-32"
     >
-      {/* Video background: coloque lvp.mp4 (ou lvp.mov) em public/assets/ */}
+      {/* Video: lvp.MOV in public/assets/ (Safari). For Chrome/Firefox add lvp.mp4 (H.264). */}
       <video
         ref={videoRef}
         autoPlay
@@ -127,7 +127,7 @@ export function Hero() {
         aria-hidden
       >
         <source src="/assets/lvp.mp4" type="video/mp4" />
-        <source src="/assets/lvp.mov" type="video/quicktime" />
+        <source src="/assets/lvp.MOV" type="video/quicktime" />
       </video>
       {/* Overlay - same as LP */}
       <div
