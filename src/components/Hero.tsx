@@ -115,7 +115,7 @@ export function Hero() {
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden bg-[#1a2036] py-20 pt-28 md:pt-32"
     >
-      {/* Video: lvp.MOV in public/assets/ (Safari). For Chrome/Firefox add lvp.mp4 (H.264). */}
+      {/* Video background: lvp.mp4 (primary), lvp.MOV fallback */}
       <video
         ref={videoRef}
         autoPlay
