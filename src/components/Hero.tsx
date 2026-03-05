@@ -2,34 +2,99 @@
 
 import { useState } from 'react'
 
+const FORM_BASE_URL = process.env.NEXT_PUBLIC_SENIOR_FLOORS_FORM_BASE_URL || 'https://lp.senior-floors.com'
+
+type ZipCheckResult = { inRange: boolean; message?: string } | null
+
 export function Hero() {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({ name: '', phone: '', email: '', zipCode: '' })
+  const [zipCheckResult, setZipCheckResult] = useState<ZipCheckResult | 'checking' | null>(null)
+  const [zipCheckLoading, setZipCheckLoading] = useState(false)
+
+  const runZipCheck = async () => {
+    const zip = form.zipCode.replace(/\D/g, '').slice(0, 5)
+    if (zip.length < 5) {
+      setZipCheckResult(null)
+      return
+    }
+    setZipCheckLoading(true)
+    setZipCheckResult('checking')
+    try {
+      const res = await fetch(`${FORM_BASE_URL}/api/validate-zip?zip=${encodeURIComponent(zip)}`, {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+      })
+      const data = await res.json()
+      if (data?.ok === true) {
+        setZipCheckResult({ inRange: data.inRange === true, message: data.message || undefined })
+      } else {
+        setZipCheckResult({ inRange: false, message: 'Could not verify ZIP.' })
+      }
+    } catch {
+      setZipCheckResult({ inRange: false, message: 'Could not check availability.' })
+    } finally {
+      setZipCheckLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    const zipClean = form.zipCode.replace(/\D/g, '').slice(0, 5)
+    if (zipClean.length < 5) {
+      setError('Please enter a valid 5-digit US zip code.')
+      return
+    }
+    if (zipCheckResult === null || zipCheckResult === 'checking') {
+      setError('Please check that your ZIP is in our service area before submitting.')
+      return
+    }
+    if (!zipCheckResult.inRange) {
+      setError(zipCheckResult.message || "We don't currently serve this ZIP code.")
+      return
+    }
+    if (form.name.trim().length < 2) {
+      setError('Name is required (at least 2 characters).')
+      return
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      setError('Please enter a valid email address.')
+      return
+    }
+    if (form.phone.replace(/\D/g, '').length < 10) {
+      setError('Please enter a valid phone number.')
+      return
+    }
     setLoading(true)
     try {
-      const res = await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          email: form.email.trim(),
-          phone: form.phone.trim(),
-          zipCode: form.zipCode.trim(),
-          serviceType: 'full_installation',
-        }),
+      const params = new URLSearchParams({
+        'form-name': 'lvp-hero-form',
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        zipcode: zipClean,
+        message: '',
       })
-      const data = await res.json()
-      if (!data.success) throw new Error(data.error || 'Failed to submit')
+      const res = await fetch(`${FORM_BASE_URL}/api/send-lead`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+        body: params.toString(),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || (data && data.success === false)) {
+        throw new Error((data && data.message) || `Request failed (${res.status})`)
+      }
+      if (typeof (window as unknown as { fbq?: (a: string, b: string) => void }).fbq === 'function') {
+        try { (window as unknown as { fbq: (a: string, b: string) => void }).fbq('track', 'Lead') } catch {}
+      }
       setSuccess(true)
       setForm({ name: '', phone: '', email: '', zipCode: '' })
+      setZipCheckResult(null)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -189,19 +254,42 @@ export function Hero() {
                     <label htmlFor="hero-zipcode" className="mb-1 block text-sm font-semibold text-[#1a2036]">
                       Zip Code *
                     </label>
-                    <input
-                      id="hero-zipcode"
-                      type="text"
-                      required
-                      pattern="[0-9]{5}"
-                      maxLength={5}
-                      value={form.zipCode}
-                      onChange={(e) => setForm((f) => ({ ...f, zipCode: e.target.value.replace(/\D/g, '') }))}
-                      className="w-full rounded-md border-2 border-[#e2e8f0] px-3 py-2.5 text-[#1a2036] focus:border-[#1a2036] focus:outline-none focus:ring-2 focus:ring-[#1a2036]/20"
-                      placeholder="80202"
-                      autoComplete="postal-code"
-                      inputMode="numeric"
-                    />
+                    <p className="mb-1 text-sm text-[#718096]">Enter your ZIP Code to check availability</p>
+                    <div className="flex gap-2">
+                      <input
+                        id="hero-zipcode"
+                        type="text"
+                        required
+                        pattern="[0-9]{5}"
+                        maxLength={5}
+                        value={form.zipCode}
+                        onChange={(e) => {
+                          setForm((f) => ({ ...f, zipCode: e.target.value.replace(/\D/g, '') }))
+                          setZipCheckResult(null)
+                        }}
+                        onBlur={() => form.zipCode.replace(/\D/g, '').length === 5 && runZipCheck()}
+                        className="min-w-0 flex-1 rounded-md border-2 border-[#e2e8f0] px-3 py-2.5 text-[#1a2036] focus:border-[#1a2036] focus:outline-none focus:ring-2 focus:ring-[#1a2036]/20"
+                        placeholder="12345"
+                        autoComplete="postal-code"
+                        inputMode="numeric"
+                      />
+                      <button
+                        type="button"
+                        onClick={runZipCheck}
+                        disabled={zipCheckLoading || form.zipCode.replace(/\D/g, '').length < 5}
+                        className="shrink-0 rounded-md bg-[#1a2036] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#252b47] disabled:cursor-not-allowed disabled:opacity-50"
+                        aria-label="Check availability"
+                      >
+                        {zipCheckLoading ? 'Checking...' : 'Check'}
+                      </button>
+                    </div>
+                    {zipCheckResult && zipCheckResult !== 'checking' && (
+                      <p className={`mt-1.5 text-sm font-medium ${zipCheckResult.inRange ? 'text-[#48bb78]' : 'text-red-600'}`} role="status">
+                        {zipCheckResult.inRange
+                          ? '✅ Great news! We serve your area.'
+                          : "❌ Sorry, we don't currently serve this ZIP Code."}
+                      </p>
+                    )}
                   </div>
                 </div>
 

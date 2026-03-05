@@ -35,7 +35,6 @@ export function ContactSection({
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
-  const [projectType, setProjectType] = useState('LVP / Luxury Vinyl Plank')
   const [zipCode, setZipCode] = useState('')
   const [message, setMessage] = useState('')
   const [sqft, setSqft] = useState(initialSqft || '')
@@ -89,10 +88,6 @@ export function ContactSection({
       setError('Please enter a valid 5-digit US zip code.')
       return
     }
-    if (!projectType?.trim()) {
-      setError('Please select a project type.')
-      return
-    }
     if (zipCheckResult === null || zipCheckResult === 'checking') {
       setError('Please check that your ZIP is in our service area before submitting.')
       return
@@ -129,7 +124,6 @@ export function ContactSection({
         name: name.trim(),
         email: email.trim(),
         phone: phone.trim(),
-        project_type: projectType.trim(),
         zipcode: zipClean,
         message: messageBody,
       })
@@ -279,25 +273,6 @@ export function ContactSection({
                         placeholder="you@example.com"
                         autoComplete="email"
                       />
-                    </div>
-                    <div>
-                      <label htmlFor="contact-project-type" className="mb-1 block text-sm font-semibold text-[#1a2036]">
-                        Project Type *
-                      </label>
-                      <select
-                        id="contact-project-type"
-                        required
-                        value={projectType}
-                        onChange={(e) => setProjectType(e.target.value)}
-                        className="w-full rounded-md border-2 border-[#e2e8f0] px-3 py-2.5 text-[#1a2036] transition focus:border-[#1a2036] focus:outline-none focus:ring-2 focus:ring-[#1a2036]/20"
-                      >
-                        <option value="">Select project type</option>
-                        <option value="Hardwood Installation">Hardwood Installation</option>
-                        <option value="Hardwood Refinishing">Hardwood Refinishing</option>
-                        <option value="LVP / Luxury Vinyl Plank">LVP / Luxury Vinyl Plank</option>
-                        <option value="Laminate">Laminate</option>
-                        <option value="Other">Other</option>
-                      </select>
                     </div>
                     <div>
                       <label htmlFor="contact-zipcode" className="mb-1 block text-sm font-semibold text-[#1a2036]">
