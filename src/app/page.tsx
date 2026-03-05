@@ -52,22 +52,34 @@ export default function Home() {
         <WhyTrustUs />
         <Benefits />
 
-        <section id="gallery-planks" className="relative scroll-mt-[var(--header-height)]" aria-label="Plank layout gallery">
+        <section id="gallery-planks" className="relative scroll-mt-[var(--header-height)]" aria-label="Our LVPs gallery">
           <div
-            className="absolute left-0 right-0 z-10 px-4 pt-4 text-center md:pt-6"
-            style={{ top: 'var(--header-height)' }}
+            className="relative w-full bg-gradient-to-b from-[#f0f4ff] to-white px-4 pb-10 pt-8 md:pb-14 md:pt-12"
+            style={{ paddingTop: 'max(var(--header-height), 2rem)' }}
           >
-            <h2 className="text-xl font-bold text-[#1a2036] md:text-2xl">
-              Our LVP Floors
-            </h2>
-            <p className="mx-auto mt-1 max-w-md text-sm text-[#4a5568] md:text-base">
-              Click a floor to see details, calculator & quote
-            </p>
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="mb-2 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-[#1a2036]/70">
+                Flooring collection
+              </span>
+              <h2 className="text-3xl font-bold tracking-tight text-[#1a2036] md:text-4xl lg:text-[2.75rem]">
+                Our LVPs
+              </h2>
+              <p className="mx-auto mt-3 max-w-lg text-base leading-relaxed text-[#4a5568] md:mt-4 md:text-lg">
+                Meet our best sellers or request a visit to see all our LVP options.
+              </p>
+              <a
+                href="#contact"
+                className="mt-6 inline-block rounded-xl bg-[#1a2036] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-[#252b47] hover:shadow-xl"
+              >
+                Request a visit
+              </a>
+            </div>
           </div>
           <VerticalPlankGallery
             products={LVP_PRODUCTS}
             onSelect={handleSelectFloor}
             onGetQuote={handleGetQuote}
+            noTopMargin
           />
         </section>
         <ContactSection

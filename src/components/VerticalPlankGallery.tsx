@@ -14,6 +14,8 @@ export interface VerticalPlankGalleryProps {
   products: LVPProduct[]
   onSelect?: (product: LVPProduct) => void
   onGetQuote?: (product: LVPProduct, sqft?: string, serviceType?: ServiceType) => void
+  /** When true, no top margin (e.g. when a section header is above the gallery) */
+  noTopMargin?: boolean
 }
 
 const FALLBACK_IMAGE = '/assets/lvp1.png'
@@ -25,7 +27,7 @@ type QuotePayload = {
   estimateTotal: number | null
 }
 
-export function VerticalPlankGallery({ products, onSelect, onGetQuote }: VerticalPlankGalleryProps) {
+export function VerticalPlankGallery({ products, onSelect, onGetQuote, noTopMargin }: VerticalPlankGalleryProps) {
   const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({})
   const [selectedForDetail, setSelectedForDetail] = useState<LVPProduct | null>(null)
   const [quoteLightboxOpen, setQuoteLightboxOpen] = useState(false)
@@ -63,7 +65,7 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote }: Vertica
         minHeight: 'calc(100vh - var(--header-height))',
         maxHeight: 'calc(100vh - var(--header-height))',
         margin: 0,
-        marginTop: 'var(--header-height)',
+        marginTop: noTopMargin ? 0 : 'var(--header-height)',
         scrollMarginTop: 'var(--header-height)',
       }}
       aria-label="Galeria de pisos em formato de tábuas"
