@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 const FORM_BASE_URL = process.env.NEXT_PUBLIC_SENIOR_FLOORS_FORM_BASE_URL || 'https://lp.senior-floors.com'
 
@@ -13,6 +13,16 @@ export function Hero() {
   const [form, setForm] = useState({ name: '', phone: '', email: '', zipCode: '' })
   const [zipCheckResult, setZipCheckResult] = useState<ZipCheckResult | 'checking' | null>(null)
   const [zipCheckLoading, setZipCheckLoading] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    const play = () => video.play().catch(() => {})
+    play()
+    video.addEventListener('loadeddata', play)
+    return () => video.removeEventListener('loadeddata', play)
+  }, [])
 
   const runZipCheck = async () => {
     const zip = form.zipCode.replace(/\D/g, '').slice(0, 5)
@@ -105,8 +115,9 @@ export function Hero() {
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden bg-[#1a2036] py-20 pt-28 md:pt-32"
     >
-      {/* Video background */}
+      {/* Video background: coloque lvp.mp4 (ou lvp.mov) em public/assets/ */}
       <video
+        ref={videoRef}
         autoPlay
         muted
         loop
@@ -115,8 +126,8 @@ export function Hero() {
         poster="/assets/lvp-background.jpg"
         aria-hidden
       >
-        <source src="/assets/lvp.mov" type="video/quicktime" />
         <source src="/assets/lvp.mp4" type="video/mp4" />
+        <source src="/assets/lvp.mov" type="video/quicktime" />
       </video>
       {/* Overlay - same as LP */}
       <div
