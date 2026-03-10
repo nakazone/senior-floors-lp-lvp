@@ -15,10 +15,12 @@ type Product = {
   imageUrl?: string
 } | null
 
+const SK_ROOM = '/assets/SK Flooring'
 const GALLERY_ITEMS = [
-  { src: '/assets/lvp1.png', alt: 'LVP flooring – premium luxury vinyl plank', caption: 'Premium LVP installation – Denver metro' },
-  { src: '/assets/lvp2.png', alt: 'LVP flooring – modern finish', caption: 'LVP flooring – residential project' },
-  { src: '/assets/lvp-background.jpg', alt: 'LVP flooring – wide plank', caption: 'Luxury vinyl plank – Colorado home' },
+  { src: `${SK_ROOM}/Arthur/Arthur - Room.png`, alt: 'Arthur LVP – room', caption: 'Arthur LVP – room installation' },
+  { src: `${SK_ROOM}/Coolidge/Coolidge - Room.png`, alt: 'Coolidge LVP – room', caption: 'Coolidge LVP – room installation' },
+  { src: `${SK_ROOM}/Eisenhower/Eisenhower - Room.png`, alt: 'Eisenhower LVP – room', caption: 'Eisenhower LVP – room installation' },
+  { src: `${SK_ROOM}/Monroe/Monroe - Room.png`, alt: 'Monroe LVP – room', caption: 'Monroe LVP – room installation' },
 ]
 
 type ZipCheckResult = { inRange: boolean; message?: string } | null
