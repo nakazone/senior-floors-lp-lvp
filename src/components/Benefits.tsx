@@ -83,7 +83,7 @@ export function Benefits() {
                   style={{ filter: 'brightness(0) invert(1)' }}
                 />
               </div>
-              <h3 className="font-semibold text-[#1a2036]">{item.title}</h3>
+              <h3 className="font-semibold text-[#1a2036]" style={{ fontSize: '1.75rem' }}>{item.title}</h3>
               {item.subtitle && (
                 <p className="mt-1 text-sm font-medium text-[#252b47]">{item.subtitle}</p>
               )}
