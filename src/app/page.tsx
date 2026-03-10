@@ -55,14 +55,12 @@ export default function Home() {
         <section
           id="gallery-planks"
           className="relative min-h-[calc(100vh-var(--header-height))] scroll-mt-[var(--header-height)] md:min-h-0"
-          style={{ paddingTop: 'var(--header-height)' }}
           aria-label="LVP Catalog gallery"
         >
           {/* Mobile: header em overlay para galeria full screen. Desktop: bloco normal acima da galeria */}
           <div
             className="absolute left-0 right-0 top-0 z-10 w-full px-3 py-2 md:static md:z-auto md:block md:w-full md:bg-gradient-to-b md:from-[#f0f4ff] md:to-white md:px-4 md:py-0 md:pb-10 md:pt-8 md:pb-14 md:pt-12"
             style={{
-              top: 'var(--header-height)',
               background: 'linear-gradient(to bottom, rgba(240,244,255,0.97) 0%, rgba(255,255,255,0.95) 60%, transparent)',
             }}
           >
