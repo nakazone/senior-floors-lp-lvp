@@ -65,11 +65,11 @@ export function Benefits() {
           {items.map((item) => (
             <div
               key={item.title}
-              className="flex items-start gap-4 rounded-xl bg-white p-6 shadow-[0_2px_10px_rgba(26,32,54,0.1)] transition hover:shadow-[0_4px_20px_rgba(26,32,54,0.15)]"
+              className="flex flex-col rounded-xl bg-white p-6 text-center shadow-[0_2px_10px_rgba(26,32,54,0.1)] transition hover:shadow-[0_4px_20px_rgba(26,32,54,0.15)]"
             >
-              {/* Ícone com fundo azul – mesmo padrão da primeira LP (service-icon) */}
+              {/* Ícone centralizado no topo – mesmo padrão da primeira LP (service-icon) */}
               <div
-                className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl p-4 shadow-[0_2px_10px_rgba(26,32,54,0.1)] transition hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(26,32,54,0.15)]"
+                className="mx-auto mb-4 flex h-20 w-20 shrink-0 items-center justify-center rounded-xl p-4 shadow-[0_2px_10px_rgba(26,32,54,0.1)] transition hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(26,32,54,0.15)]"
                 style={{
                   background: 'linear-gradient(135deg, #1a2036 0%, #252b47 100%)',
                 }}
@@ -83,15 +83,15 @@ export function Benefits() {
                   style={{ filter: 'brightness(0) invert(1)' }}
                 />
               </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="font-semibold text-[#1a2036]">{item.title}</h3>
-                {item.subtitle && (
-                  <p className="mt-1 text-sm font-medium text-[#252b47]">{item.subtitle}</p>
-                )}
-                {item.description && (
-                  <p className="mt-2 text-sm leading-relaxed text-[#4a5568]">{item.description}</p>
-                )}
-              </div>
+              <h3 className="font-semibold text-[#1a2036]">{item.title}</h3>
+              {item.subtitle && (
+                <p className="mt-1 text-sm font-medium text-[#252b47]">{item.subtitle}</p>
+              )}
+              {item.description && (
+                <p className="mt-2 text-left text-sm leading-relaxed text-[#4a5568]">
+                  {item.description}
+                </p>
+              )}
             </div>
           ))}
         </div>
