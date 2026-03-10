@@ -54,7 +54,7 @@ export default function Home() {
 
         <section
           id="gallery-planks"
-          className="relative min-h-[calc(100vh-var(--header-height))] snap-start scroll-mt-[var(--header-height)] md:min-h-0"
+          className="relative min-h-[calc(100vh-var(--header-height))] scroll-mt-[var(--header-height)] md:min-h-0"
           aria-label="LVP Catalog gallery"
         >
           {/* Mobile: header em overlay para galeria full screen. Desktop: bloco normal acima da galeria */}
