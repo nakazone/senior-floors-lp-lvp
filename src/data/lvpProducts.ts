@@ -10,6 +10,7 @@ function skProduct(
   plankFileName: string,
   roomFileName: string,
   sampleFileName: string,
+  sku: string,
   overrides: Partial<{
     id: string
     name: string
@@ -28,7 +29,7 @@ function skProduct(
     name: overrides.name ?? name,
     description: overrides.description ?? `${name} LVP from SK Flooring`,
     thickness: overrides.thickness ?? 8,
-    wearLayer: overrides.wearLayer ?? 20,
+    wearLayer: overrides.wearLayer ?? 22,
     color: overrides.color ?? name,
     pricePerSqft: overrides.pricePerSqft ?? 4.0,
     waterproof: true,
@@ -40,7 +41,7 @@ function skProduct(
     ],
     specs: [
       { label: 'Thickness', value: '8MM' },
-      { label: 'SKU', value: 'S801312-H' },
+      { label: 'SKU', value: sku },
       { label: 'Material Type', value: 'SPC Flooring' },
       { label: 'Plank Size', value: '9″ x 60″' },
       { label: 'Total Thickness', value: '(6.5 + 1.5)mm' },
@@ -71,12 +72,12 @@ export type LVPProduct = {
 }
 
 export const LVP_PRODUCTS: LVPProduct[] = [
-  skProduct('Arthur', 'Arthur - Plank.png', 'Arthur - Room.png', 'Arthur.png'),
-  skProduct('Buchanan', 'Buchanan - Plank.png', 'Buchanan - Room.png', 'Buchanan.png'),
-  skProduct('Coolidge', 'Coolidge - Plank.png', 'Coolidge - Room.png', 'Coolidge.png'),
-  skProduct('Eisenhower', 'Eisenhower - Plank.png', 'Eisenhower - Room.png', 'Eisenhower.png'),
-  skProduct('Hayes', 'Hayes - Plank.png', 'Hayes - Room.png', 'Hayes.png'),
-  skProduct('Monroe', 'Monroe - Plank.png', 'Monroe - Room.png', 'Monroe.png'),
-  skProduct('Roosevelt', 'Roosevelt-Plank.png', 'Roosevelt - Room.png', 'Roosevelt.png'),
-  skProduct('Vanburen', 'Vanburen-Plank.png', 'Vanburen - Room.png', 'Vanburen.png'),
+  skProduct('Arthur', 'Arthur - Plank.png', 'Arthur - Room.png', 'Arthur.png', 'S801312-H'),
+  skProduct('Buchanan', 'Buchanan - Plank.png', 'Buchanan - Room.png', 'Buchanan.png', 'S801311-H'),
+  skProduct('Coolidge', 'Coolidge - Plank.png', 'Coolidge - Room.png', 'Coolidge.png', 'S801302-H'),
+  skProduct('Eisenhower', 'Eisenhower - Plank.png', 'Eisenhower - Room.png', 'Eisenhower.png', 'S801304-H'),
+  skProduct('Hayes', 'Hayes - Plank.png', 'Hayes - Room.png', 'Hayes.png', 'S801310-H'),
+  skProduct('Monroe', 'Monroe - Plank.png', 'Monroe - Room.png', 'Monroe.png', 'S801309-H'),
+  skProduct('Roosevelt', 'Roosevelt-Plank.png', 'Roosevelt - Room.png', 'Roosevelt.png', 'S801301-H'),
+  skProduct('Vanburen', 'Vanburen-Plank.png', 'Vanburen - Room.png', 'Vanburen.png', 'S801308-H'),
 ]
