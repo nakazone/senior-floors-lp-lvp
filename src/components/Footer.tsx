@@ -7,18 +7,18 @@ export function Footer() {
     <footer className="bg-[#1a2036] text-white">
       <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
         <div className="mb-12 grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-12">
-          {/* Column 1: Logo + description + trust + certificate - same as LP */}
-          <div className="flex flex-col">
+          {/* Column 1: Logo + description + trust + certificate - alinhado à esquerda, logo maior */}
+          <div className="flex flex-col items-start text-left">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/SeniorFloors.png"
               alt="Senior Floors"
-              className="mb-4 h-[70px] w-auto object-contain"
+              className="mb-4 h-[100px] w-auto object-contain object-left md:h-[120px]"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none'
               }}
             />
-            <p className="mb-4 text-sm leading-relaxed text-white/80">
+            <p className="mb-4 text-left text-sm leading-relaxed text-white/80">
               Elegant, durable flooring installed with precision and care. Denver&apos;s trusted hardwood flooring
               experts serving medium to high-end homes across the metro area.
             </p>

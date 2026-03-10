@@ -43,14 +43,14 @@ export function Header() {
           className="flex flex-wrap items-center justify-between gap-4 py-4 md:py-4"
           style={{ minHeight: 'var(--header-height)' }}
         >
-          {/* Logo - máximo possível dentro da altura do header (56px mobile, 90px desktop) */}
-          <div className="order-1 flex h-[56px] flex-shrink-0 items-center md:order-none md:h-[90px]">
+          {/* Logo - tamanho máximo no header (64px mobile, 104px desktop) */}
+          <div className="order-1 flex h-[64px] flex-shrink-0 items-center md:order-none md:h-[104px]">
             <a href="#hero" className="flex h-full items-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/assets/SeniorFloors.png"
                 alt="Senior Floors"
-                className="max-h-[56px] w-auto object-contain object-left md:max-h-[90px]"
+                className="h-full w-auto object-contain object-left"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement
                   target.style.display = 'none'
