@@ -39,15 +39,18 @@ export function Header() {
       }}
     >
       <div className="mx-auto w-full max-w-[1200px] px-4">
-        <div className="flex flex-wrap items-center justify-between gap-4 py-4 md:py-4">
-          {/* Logo - mesmo tamanho da primeira LP: 55px mobile, 90px desktop */}
-          <div className="order-1 flex-shrink-0 md:order-none">
-            <a href="#hero" className="flex items-center">
+        <div
+          className="flex flex-wrap items-center justify-between gap-4 py-4 md:py-4"
+          style={{ minHeight: 'var(--header-height)' }}
+        >
+          {/* Logo - máximo possível dentro da altura do header (56px mobile, 90px desktop) */}
+          <div className="order-1 flex h-[56px] flex-shrink-0 items-center md:order-none md:h-[90px]">
+            <a href="#hero" className="flex h-full items-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/assets/SeniorFloors.png"
                 alt="Senior Floors"
-                className="h-[55px] w-auto object-contain md:h-[90px]"
+                className="max-h-[56px] w-auto object-contain object-left md:max-h-[90px]"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement
                   target.style.display = 'none'

@@ -11,7 +11,7 @@ export function Footer() {
           <div className="flex flex-col">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://senior-floors.com/assets/SeniorFloors.png"
+              src="/assets/SeniorFloors.png"
               alt="Senior Floors"
               className="mb-4 h-[70px] w-auto object-contain"
               onError={(e) => {
