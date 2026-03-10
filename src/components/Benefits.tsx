@@ -46,7 +46,7 @@ const items = [
     subtitle: 'Beautiful Floors with Minimal Effort',
     description:
       'LVP flooring requires very little maintenance to keep it looking new. Simple sweeping and occasional mopping are enough to maintain its appearance. No sanding, refinishing, or special treatments are required—making it a perfect solution for busy households.',
-    icon: '/assets/fast.png',
+    icon: '/assets/cleaning.png',
     alt: 'Easy maintenance',
   },
 ]
