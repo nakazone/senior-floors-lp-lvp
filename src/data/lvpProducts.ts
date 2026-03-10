@@ -11,6 +11,7 @@ function skProduct(
   roomFileName: string,
   sampleFileName: string,
   sku: string,
+  colorOrder: number,
   overrides: Partial<{
     id: string
     name: string
@@ -39,6 +40,7 @@ function skProduct(
       { src: `${base}/${roomFileName}`, label: `Room with ${name} installed` },
       { src: `${base}/${sampleFileName}`, label: `${name} LVP Sample` },
     ],
+    colorOrder,
     specs: [
       { label: 'Thickness', value: '8MM' },
       { label: 'SKU', value: sku },
@@ -69,15 +71,23 @@ export type LVPProduct = {
   galleryImages?: string[]
   gallerySlides?: Array<{ src: string; label: string }>
   specs?: Array<{ label: string; value: string }>
+  /** Ordem na galeria por cor (1 = mais claro, 8 = mais escuro). */
+  colorOrder?: number
 }
 
+/** Produtos em ordem de nome. Use LVP_PRODUCTS_BY_COLOR para a galeria. */
 export const LVP_PRODUCTS: LVPProduct[] = [
-  skProduct('Arthur', 'Arthur - Plank.png', 'Arthur - Room.png', 'Arthur.png', 'S801312-H'),
-  skProduct('Buchanan', 'Buchanan - Plank.png', 'Buchanan - Room.png', 'Buchanan.png', 'S801311-H'),
-  skProduct('Coolidge', 'Coolidge - Plank.png', 'Coolidge - Room.png', 'Coolidge.png', 'S801302-H'),
-  skProduct('Eisenhower', 'Eisenhower - Plank.png', 'Eisenhower - Room.png', 'Eisenhower.png', 'S801304-H'),
-  skProduct('Hayes', 'Hayes - Plank.png', 'Hayes - Room.png', 'Hayes.png', 'S801310-H'),
-  skProduct('Monroe', 'Monroe - Plank.png', 'Monroe - Room.png', 'Monroe.png', 'S801309-H'),
-  skProduct('Roosevelt', 'Roosevelt-Plank.png', 'Roosevelt - Room.png', 'Roosevelt.png', 'S801301-H'),
-  skProduct('Vanburen', 'Vanburen-Plank.png', 'Vanburen - Room.png', 'Vanburen.png', 'S801308-H'),
+  skProduct('Arthur', 'Arthur - Plank.png', 'Arthur - Room.png', 'Arthur.png', 'S801312-H', 4),
+  skProduct('Buchanan', 'Buchanan - Plank.png', 'Buchanan - Room.png', 'Buchanan.png', 'S801311-H', 7),
+  skProduct('Coolidge', 'Coolidge - Plank.png', 'Coolidge - Room.png', 'Coolidge.png', 'S801302-H', 2),
+  skProduct('Eisenhower', 'Eisenhower - Plank.png', 'Eisenhower - Room.png', 'Eisenhower.png', 'S801304-H', 5),
+  skProduct('Hayes', 'Hayes - Plank.png', 'Hayes - Room.png', 'Hayes.png', 'S801310-H', 3),
+  skProduct('Monroe', 'Monroe - Plank.png', 'Monroe - Room.png', 'Monroe.png', 'S801309-H', 6),
+  skProduct('Roosevelt', 'Roosevelt-Plank.png', 'Roosevelt - Room.png', 'Roosevelt.png', 'S801301-H', 1),
+  skProduct('Vanburen', 'Vanburen-Plank.png', 'Vanburen - Room.png', 'Vanburen.png', 'S801308-H', 8),
 ]
+
+/** Galeria ordenada por cor (claro → escuro). Ajuste colorOrder em cada produto para alterar a ordem. */
+export const LVP_PRODUCTS_BY_COLOR: LVPProduct[] = [...LVP_PRODUCTS].sort(
+  (a, b) => (a.colorOrder ?? 99) - (b.colorOrder ?? 99)
+)

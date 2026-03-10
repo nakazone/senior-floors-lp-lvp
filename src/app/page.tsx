@@ -76,7 +76,7 @@ export default function Home() {
             </div>
           </div>
           <VerticalPlankGallery
-            products={LVP_PRODUCTS}
+            products={LVP_PRODUCTS_BY_COLOR}
             onSelect={handleSelectFloor}
             onGetQuote={handleGetQuote}
             noTopMargin
