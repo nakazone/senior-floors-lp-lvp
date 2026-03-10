@@ -59,14 +59,14 @@ export function VerticalPlankGallery({ products, onSelect, onGetQuote, noTopMarg
   return (
     <section
       id="plank-gallery"
-      className="relative w-full overflow-hidden snap-start snap-always box-border"
+      className="relative w-full overflow-hidden box-border"
       style={{
         height: 'calc(100vh - var(--header-height))',
         minHeight: 'calc(100vh - var(--header-height))',
         maxHeight: 'calc(100vh - var(--header-height))',
         margin: 0,
         marginTop: noTopMargin ? 0 : 'var(--header-height)',
-        scrollMarginTop: 'var(--header-height)',
+        scrollMarginTop: noTopMargin ? 0 : 'var(--header-height)',
       }}
       aria-label="Galeria de pisos em formato de tábuas"
     >
