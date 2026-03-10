@@ -138,9 +138,13 @@ function PlankColumn({
 
   return (
     <div
-      className="group relative flex min-w-0 flex-1 overflow-hidden"
+      role="button"
+      tabIndex={0}
+      className="group relative flex min-w-0 flex-1 cursor-pointer overflow-hidden"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onClick={() => onSelect?.(product)}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect?.(product) } }}
     >
       <div className="relative h-full w-full">
         <Image
@@ -166,7 +170,7 @@ function PlankColumn({
         </p>
         <button
           type="button"
-          onClick={() => onSelect?.(product)}
+          onClick={(e) => { e.stopPropagation(); onSelect?.(product) }}
           className="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-[#1a2036] transition hover:bg-white/90"
         >
           Select This Floor

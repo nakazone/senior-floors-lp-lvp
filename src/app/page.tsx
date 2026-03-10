@@ -52,24 +52,33 @@ export default function Home() {
         <WhyTrustUs />
         <Benefits />
 
-        <section id="gallery-planks" className="relative scroll-mt-[var(--header-height)]" aria-label="LVP Catalog gallery">
+        <section
+          id="gallery-planks"
+          className="relative min-h-[calc(100vh-var(--header-height))] scroll-mt-[var(--header-height)] md:min-h-0"
+          style={{ paddingTop: 'var(--header-height)' }}
+          aria-label="LVP Catalog gallery"
+        >
+          {/* Mobile: header em overlay para galeria full screen. Desktop: bloco normal acima da galeria */}
           <div
-            className="relative w-full bg-gradient-to-b from-[#f0f4ff] to-white px-4 pb-10 pt-8 md:pb-14 md:pt-12"
-            style={{ paddingTop: 'max(var(--header-height), 2rem)' }}
+            className="absolute left-0 right-0 top-0 z-10 w-full px-3 py-2 md:static md:z-auto md:block md:w-full md:bg-gradient-to-b md:from-[#f0f4ff] md:to-white md:px-4 md:py-0 md:pb-10 md:pt-8 md:pb-14 md:pt-12"
+            style={{
+              top: 'var(--header-height)',
+              background: 'linear-gradient(to bottom, rgba(240,244,255,0.97) 0%, rgba(255,255,255,0.95) 60%, transparent)',
+            }}
           >
-            <div className="mx-auto max-w-2xl text-center">
-              <span className="mb-2 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-[#1a2036]/70">
+            <div className="mx-auto max-w-2xl text-center md:max-w-2xl">
+              <span className="mb-1 inline-block text-[10px] font-semibold uppercase tracking-[0.15em] text-[#1a2036]/80 md:mb-2 md:text-xs md:tracking-[0.2em]">
                 Flooring collection
               </span>
-              <h2 className="text-3xl font-bold tracking-tight text-[#1a2036] md:text-4xl lg:text-[2.75rem]">
+              <h2 className="text-xl font-bold tracking-tight text-[#1a2036] md:text-4xl lg:text-[2.75rem]">
                 LVP Catalog
               </h2>
-              <p className="mx-auto mt-3 max-w-lg text-base leading-relaxed text-[#4a5568] md:mt-4 md:text-lg">
+              <p className="mx-auto mt-1 hidden max-w-lg text-sm leading-relaxed text-[#4a5568] md:mt-4 md:block md:text-lg">
                 Meet our best sellers or request a visit to see all our LVP options.
               </p>
               <a
                 href="#contact"
-                className="mt-6 inline-block rounded-xl bg-[#1a2036] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-[#252b47] hover:shadow-xl"
+                className="mt-2 inline-block rounded-lg bg-[#1a2036] px-4 py-2 text-xs font-semibold text-white shadow transition hover:bg-[#252b47] md:mt-6 md:rounded-xl md:px-6 md:py-3 md:text-sm md:shadow-lg md:shadow-xl"
               >
                 Request a visit
               </a>
