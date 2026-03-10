@@ -52,7 +52,7 @@ export default function Home() {
         <WhyTrustUs />
         <Benefits />
 
-        <section id="gallery-planks" className="relative scroll-mt-[var(--header-height)]" aria-label="Our LVPs gallery">
+        <section id="gallery-planks" className="relative scroll-mt-[var(--header-height)]" aria-label="LVP Catalog gallery">
           <div
             className="relative w-full bg-gradient-to-b from-[#f0f4ff] to-white px-4 pb-10 pt-8 md:pb-14 md:pt-12"
             style={{ paddingTop: 'max(var(--header-height), 2rem)' }}
@@ -62,7 +62,7 @@ export default function Home() {
                 Flooring collection
               </span>
               <h2 className="text-3xl font-bold tracking-tight text-[#1a2036] md:text-4xl lg:text-[2.75rem]">
-                Our LVPs
+                LVP Catalog
               </h2>
               <p className="mx-auto mt-3 max-w-lg text-base leading-relaxed text-[#4a5568] md:mt-4 md:text-lg">
                 Meet our best sellers or request a visit to see all our LVP options.
